@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface TempRepository extends JpaRepository<Temp, Integer> {
 
     @Query(
-            value = "SELECT DISTINCT temp_id FROM temps INNER JOIN jobs ON temps.id = jobs.temp_id WHERE NOT ( (jobs.start_date <= 6) AND (jobs.end_date >= 3) ) AND temp_id NOT IN ( SELECT temp_id FROM temps INNER JOIN jobs ON temps.id = jobs.temp_id WHERE ( (jobs.start_date <= 6) AND (jobs.end_date >= 3) ) ) UNION (SELECT id from temps WHERE id NOT IN (SELECT temp_id FROM temps INNER JOIN jobs ON temps.id = jobs.temp_id ));",
+            value = "SELECT DISTINCT temp_id FROM temps INNER JOIN jobs ON temps.id = jobs.temp_id WHERE NOT ( (jobs.start_date <= ?2) AND (jobs.end_date >= ?1) ) AND temp_id NOT IN ( SELECT temp_id FROM temps INNER JOIN jobs ON temps.id = jobs.temp_id WHERE ( (jobs.start_date <= ?2) AND (jobs.end_date >= ?1) ) ) UNION (SELECT id from temps WHERE id NOT IN (SELECT temp_id FROM temps INNER JOIN jobs ON temps.id = jobs.temp_id ));",
             nativeQuery = true
     )
     List<Integer> findByDates(Integer startDate, Integer endDate);
