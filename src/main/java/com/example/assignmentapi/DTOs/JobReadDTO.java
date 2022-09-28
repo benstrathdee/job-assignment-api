@@ -5,8 +5,8 @@ import com.example.assignmentapi.Entities.Job;
 public class JobReadDTO {
     private final Integer id;
     private final String name;
-    private final Integer startDate;
-    private final Integer endDate;
+    private final Long startDate;
+    private final Long endDate;
 
     public Integer getId() {
         return id;
@@ -16,11 +16,11 @@ public class JobReadDTO {
         return name;
     }
 
-    public Integer getStartDate() {
+    public Long getStartDate() {
         return startDate;
     }
 
-    public Integer getEndDate() {
+    public Long getEndDate() {
         return endDate;
     }
 

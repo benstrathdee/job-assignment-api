@@ -21,14 +21,14 @@ public class JobController {
     // POST /jobs
     @PostMapping
     public ResponseEntity<Job> createJob ( @Valid @RequestBody JobCreateDTO data ) {
-        // Creates a job
+        // Creates a job from data in request body
         Job job = this.service.create(data);
         return new ResponseEntity<>(job, job != null ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST);
     }
 
     // PATCH /jobs/{id}
     @PatchMapping(path = "/{id}")
-    public ResponseEntity<Job> updateJob ( @PathVariable Integer id, @Valid @RequestBody JobUpdateDTO data ) {
+    public ResponseEntity<Job> updateJob ( @PathVariable Integer id, @RequestBody JobUpdateDTO data ) {
         // Updates job with id using data from request body
         Job job = this.service.update(id, data);
         return new ResponseEntity<>(job, job != null ? HttpStatus.OK : HttpStatus.BAD_REQUEST);

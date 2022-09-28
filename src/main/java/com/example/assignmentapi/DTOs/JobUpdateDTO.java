@@ -2,19 +2,19 @@ package com.example.assignmentapi.DTOs;
 
 public class JobUpdateDTO {
     private String name;
-    private Integer startDate;
-    private Integer endDate;
+    private Long startDate;
+    private Long endDate;
     private Integer tempId;
 
     public String getName() {
         return name;
     }
 
-    public Integer getStartDate() {
+    public Long getStartDate() {
         return startDate;
     }
 
-    public Integer getEndDate() {
+    public Long getEndDate() {
         return endDate;
     }
 

@@ -15,9 +15,9 @@ public class Job {
     @NotBlank
     private String name;
     @NotBlank
-    private Integer startDate;
+    private Long startDate;
     @NotBlank
-    private Integer endDate;
+    private Long endDate;
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "temp_id")
     private Temp temp;
@@ -34,19 +34,19 @@ public class Job {
         this.name = name;
     }
 
-    public Integer getStartDate() {
+    public Long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Integer startDate) {
+    public void setStartDate(Long startDate) {
         this.startDate = startDate;
     }
 
-    public Integer getEndDate() {
+    public Long getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Integer endDate) {
+    public void setEndDate(Long endDate) {
         this.endDate = endDate;
     }
 
@@ -61,7 +61,7 @@ public class Job {
         this.temp = temp;
     }
 
-    public Job(String name, Integer startDate, Integer endDate, Temp temp) {
+    public Job(String name, Long startDate, Long endDate, Temp temp) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;

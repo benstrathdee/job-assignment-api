@@ -21,7 +21,7 @@ public class JobService {
     @Autowired
     TempRepository tempRepository;
 
-    public Boolean checkAvailability (Integer tempId, Integer startDate, Integer endDate) {
+    public Boolean checkAvailability (Integer tempId, Long startDate, Long endDate) {
         // Check if specified temp is available for a job in the date range provided
         List<Integer> availableTemps = this.tempRepository.findByDates(startDate, endDate);
         return availableTemps.contains(tempId);
@@ -72,7 +72,7 @@ public class JobService {
                 job.setEndDate(data.getEndDate());
             }
             if (data.getTempId() != null) {
-                if (!checkAvailability(data.getTempId(), data.getStartDate(), data.getEndDate())) {
+                if (!checkAvailability(data.getTempId(), job.getStartDate(), job.getEndDate())) {
                     return null;
                 }
                 Optional<Temp> fetchedTemp = tempRepository.findById(data.getTempId());

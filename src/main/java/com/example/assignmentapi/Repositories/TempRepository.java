@@ -4,6 +4,7 @@ import com.example.assignmentapi.Entities.Temp;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,10 +12,10 @@ import java.util.Optional;
 public interface TempRepository extends JpaRepository<Temp, Integer> {
 
     @Query(
-            value = "SELECT DISTINCT temp_id FROM temps INNER JOIN jobs ON temps.id = jobs.temp_id WHERE NOT ( (jobs.start_date <= ?2) AND (jobs.end_date >= ?1) ) AND temp_id NOT IN ( SELECT temp_id FROM temps INNER JOIN jobs ON temps.id = jobs.temp_id WHERE ( (jobs.start_date <= ?2) AND (jobs.end_date >= ?1) ) ) UNION (SELECT id from temps WHERE id NOT IN (SELECT temp_id FROM temps INNER JOIN jobs ON temps.id = jobs.temp_id ));",
+            value = "SELECT DISTINCT temp_id FROM temps INNER JOIN jobs ON temps.id = jobs.temp_id WHERE NOT ( (jobs.start_date <= :end) AND (jobs.end_date >= :start) ) AND temp_id NOT IN ( SELECT temp_id FROM temps INNER JOIN jobs ON temps.id = jobs.temp_id WHERE ( (jobs.start_date <= :end) AND (jobs.end_date >= :start) ) ) UNION (SELECT id from temps WHERE id NOT IN (SELECT temp_id FROM temps INNER JOIN jobs ON temps.id = jobs.temp_id ));",
             nativeQuery = true
     )
-    List<Integer> findByDates(Integer startDate, Integer endDate);
+    List<Integer> findByDates(@Param("start") Long startDate, @Param("end") Long endDate);
 
     @NotNull Optional<Temp> findById(@NotNull Integer id);
 }

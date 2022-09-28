@@ -6,20 +6,20 @@ public class JobCreateDTO {
     @NotBlank
     private String name;
     @NotBlank
-    private Integer startDate;
+    private Long startDate;
     @NotBlank
-    private Integer endDate;
+    private Long endDate;
     private Integer tempId;
 
     public String getName() {
         return name;
     }
 
-    public Integer getStartDate() {
+    public Long getStartDate() {
         return startDate;
     }
 
-    public Integer getEndDate() {
+    public Long getEndDate() {
         return endDate;
     }
 
