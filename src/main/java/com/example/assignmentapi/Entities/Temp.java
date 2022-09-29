@@ -1,11 +1,7 @@
 package com.example.assignmentapi.Entities;
 
-import com.example.assignmentapi.DTOs.JobReadDTO;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
 import java.util.Set;
 
 @Entity
@@ -18,6 +14,10 @@ public class Temp {
     private String firstName;
     @NotBlank
     private String lastName;
+    @NotBlank
+    private Integer leftVal;
+    @NotBlank
+    private Integer rightVal;
     @OneToMany(mappedBy = "temp", fetch = FetchType.LAZY)
     private Set<Job> jobs;
 
@@ -41,27 +41,31 @@ public class Temp {
         this.lastName = lastName;
     }
 
-    public ArrayList<JobReadDTO> getJobs() {
-        ArrayList<JobReadDTO> jobDTOs = new ArrayList<>();
-        if (this.jobs != null) {
-            for (Job job : this.jobs) {
-                jobDTOs.add(new JobReadDTO(job));
-            }
-        }
-        return jobDTOs;
+    public Integer getLeftVal() {
+        return leftVal;
     }
 
-    public void addJob(Job job) {
-        this.jobs.add(job);
+    public void setLeftVal(Integer leftVal) {
+        this.leftVal = leftVal;
     }
 
-    public void removeJob(Job job) {
-        this.jobs.remove(job);
+    public Integer getRightVal() {
+        return rightVal;
     }
 
-    public Temp (String firstName, String lastName) {
+    public void setRightVal(Integer rightVal) {
+        this.rightVal = rightVal;
+    }
+
+    public Set<Job> getJobs() {
+        return this.jobs;
+    }
+
+    public Temp (String firstName, String lastName /*, TODO Integer leftVal, Integer rightVal */) {
         this.firstName = firstName;
         this.lastName = lastName;
+        // this.leftVal = leftVal;
+        // this.rightVal = rightVal;
     }
 
     public Temp () {

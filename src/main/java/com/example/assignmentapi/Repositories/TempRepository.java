@@ -1,11 +1,11 @@
 package com.example.assignmentapi.Repositories;
 
 import com.example.assignmentapi.Entities.Temp;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +16,10 @@ public interface TempRepository extends JpaRepository<Temp, Integer> {
             nativeQuery = true
     )
     List<Integer> findByDates(@Param("start") Long startDate, @Param("end") Long endDate);
+
+    // TODO
+    // Query to get the whole tree
+    // Query to get a manager's underlings
 
     @NotNull Optional<Temp> findById(@NotNull Integer id);
 }

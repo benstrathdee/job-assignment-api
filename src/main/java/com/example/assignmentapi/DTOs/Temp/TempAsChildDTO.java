@@ -1,8 +1,8 @@
-package com.example.assignmentapi.DTOs;
+package com.example.assignmentapi.DTOs.Temp;
 
 import com.example.assignmentapi.Entities.Temp;
 
-public class TempReadDTO {
+public class TempAsChildDTO {
     private final Integer id;
     private final String firstName;
     private final String lastName;
@@ -19,7 +19,7 @@ public class TempReadDTO {
         return lastName;
     }
 
-    public TempReadDTO (Temp temp) {
+    public TempAsChildDTO(Temp temp) {
         this.id = temp.getId();
         this.firstName = temp.getFirstName();
         this.lastName = temp.getLastName();

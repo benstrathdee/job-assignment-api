@@ -1,8 +1,5 @@
 package com.example.assignmentapi.Entities;
 
-import com.example.assignmentapi.DTOs.TempReadDTO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
@@ -50,11 +47,8 @@ public class Job {
         this.endDate = endDate;
     }
 
-    public TempReadDTO getTemp() {
-        if (this.temp != null) {
-            return new TempReadDTO(this.temp);
-        }
-        return null;
+    public Temp getTemp() {
+        return this.temp;
     }
 
     public void setTemp(Temp temp) {

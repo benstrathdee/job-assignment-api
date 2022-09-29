@@ -1,12 +1,14 @@
-package com.example.assignmentapi.DTOs;
+package com.example.assignmentapi.DTOs.Job;
 
+import com.example.assignmentapi.DTOs.Temp.TempAsChildDTO;
 import com.example.assignmentapi.Entities.Job;
 
-public class JobReadDTO {
+public class JobGetDTO {
     private final Integer id;
     private final String name;
     private final Long startDate;
     private final Long endDate;
+    private final TempAsChildDTO temp;
 
     public Integer getId() {
         return id;
@@ -24,10 +26,15 @@ public class JobReadDTO {
         return endDate;
     }
 
-    public JobReadDTO (Job job) {
+    public TempAsChildDTO getTemp() {
+        return temp;
+    }
+
+    public JobGetDTO(Job job) {
         this.id = job.getId();
         this.name = job.getName();
         this.startDate = job.getStartDate();
         this.endDate = job.getEndDate();
+        this.temp = job.getTemp() != null ? new TempAsChildDTO(job.getTemp()) : null;
     }
 }
