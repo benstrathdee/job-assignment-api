@@ -2,7 +2,7 @@ package com.example.assignmentapi.DTOs.Temp;
 
 import com.example.assignmentapi.Entities.Temp;
 
-public class TempAsChildDTO {
+public class TempAsChild {
     private final Integer id;
     private final String firstName;
     private final String lastName;
@@ -19,7 +19,7 @@ public class TempAsChildDTO {
         return lastName;
     }
 
-    public TempAsChildDTO(Temp temp) {
+    public TempAsChild(Temp temp) {
         this.id = temp.getId();
         this.firstName = temp.getFirstName();
         this.lastName = temp.getLastName();

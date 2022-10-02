@@ -1,8 +1,8 @@
 package com.example.assignmentapi.Controllers;
 
-import com.example.assignmentapi.DTOs.Job.JobCreateDTO;
-import com.example.assignmentapi.DTOs.Job.JobGetDTO;
-import com.example.assignmentapi.DTOs.Job.JobUpdateDTO;
+import com.example.assignmentapi.DTOs.Job.JobCreateData;
+import com.example.assignmentapi.DTOs.Job.JobWithTemp;
+import com.example.assignmentapi.DTOs.Job.JobUpdateData;
 import com.example.assignmentapi.Services.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(path="/jobs")
@@ -19,42 +19,41 @@ public class JobController {
     JobService service;
 
     // POST /jobs
-    @PostMapping
-    public ResponseEntity<JobGetDTO> createJob (@Valid @RequestBody JobCreateDTO data ) {
         // Creates a job from data in request body
-        JobGetDTO job = this.service.create(data);
+    @PostMapping
+    public ResponseEntity<JobWithTemp> createJob (@Valid @RequestBody JobCreateData data ) {
+        JobWithTemp job = this.service.create(data);
         return new ResponseEntity<>(job, job != null ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST);
     }
 
     // PATCH /jobs/{id}
-    @PatchMapping(path = "/{id}")
-    public ResponseEntity<JobGetDTO> updateJob ( @PathVariable Integer id, @RequestBody JobUpdateDTO data ) {
         // Updates job with id using data from request body
-        // TODO : Add alternative 404 response when job with id not found
-        JobGetDTO job = this.service.update(id, data);
+    @PatchMapping(path = "/{id}")
+    public ResponseEntity<JobWithTemp> updateJob (@PathVariable Integer id, @RequestBody JobUpdateData data ) {
+        JobWithTemp job = this.service.update(id, data);
         return new ResponseEntity<>(job, job != null ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     // GET /jobs
+        // Fetch all jobs
     // GET /jobs?assigned={true|false}
+        // Filter by whether a job is assigned to a temp or not
     @GetMapping
-    public ResponseEntity<ArrayList<JobGetDTO>> getJobs ( @RequestParam(required = false) Boolean assigned ) {
-        ArrayList<JobGetDTO> jobs;
+    public ResponseEntity<List<JobWithTemp>> getJobs (@RequestParam(required = false) Boolean assigned ) {
+        List<JobWithTemp> jobs;
         if (assigned != null) {
-            // Filter by whether a job is assigned to a temp or not
             jobs = this.service.getByAssigned(assigned);
         } else {
-            // Fetch all jobs
-            jobs = this.service.all();
+            jobs = this.service.getAll();
         }
         return new ResponseEntity<>(jobs, jobs != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 
     // GET /jobs/{id}
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<JobGetDTO> getJob ( @PathVariable Integer id ) {
         // get the job with id
-        JobGetDTO job = this.service.getById(id);
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<JobWithTemp> getJob (@PathVariable Integer id ) {
+        JobWithTemp job = this.service.getById(id);
         return new ResponseEntity<>(job, job != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
     }
 }

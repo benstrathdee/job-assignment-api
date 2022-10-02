@@ -2,12 +2,12 @@ package com.example.assignmentapi.DTOs.Temp;
 
 import javax.validation.constraints.NotBlank;
 
-public class TempCreateDTO {
+public class TempCreateData {
     @NotBlank
     private String firstName;
     @NotBlank
     private String lastName;
-    private String managerId;
+    private Integer managerId;
 
     public String getFirstName() {
         return firstName;
@@ -17,7 +17,7 @@ public class TempCreateDTO {
         return lastName;
     }
 
-    public String getManagerId() {
+    public Integer getManagerId() {
         return managerId;
     }
 }

@@ -61,11 +61,11 @@ public class Temp {
         return this.jobs;
     }
 
-    public Temp (String firstName, String lastName /*, TODO Integer leftVal, Integer rightVal */) {
+    public Temp (String firstName, String lastName, Integer leftVal, Integer rightVal) {
         this.firstName = firstName;
         this.lastName = lastName;
-        // this.leftVal = leftVal;
-        // this.rightVal = rightVal;
+        this.leftVal = leftVal;
+        this.rightVal = rightVal;
     }
 
     public Temp () {

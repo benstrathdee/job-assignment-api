@@ -1,8 +1,13 @@
 package com.example.assignmentapi.DTOs.Job;
 
-public class JobUpdateDTO {
+import javax.validation.constraints.NotBlank;
+
+public class JobCreateData {
+    @NotBlank
     private String name;
+    @NotBlank
     private Long startDate;
+    @NotBlank
     private Long endDate;
     private Integer tempId;
 

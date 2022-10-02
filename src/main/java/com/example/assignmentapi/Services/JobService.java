@@ -1,8 +1,9 @@
 package com.example.assignmentapi.Services;
 
-import com.example.assignmentapi.DTOs.Job.JobCreateDTO;
-import com.example.assignmentapi.DTOs.Job.JobGetDTO;
-import com.example.assignmentapi.DTOs.Job.JobUpdateDTO;
+import com.example.assignmentapi.DTOs.Job.JobCreateData;
+import com.example.assignmentapi.DTOs.Job.JobWithTemp;
+import com.example.assignmentapi.DTOs.Job.JobUpdateData;
+import com.example.assignmentapi.DTOs.Temp.TempAsChild;
 import com.example.assignmentapi.Entities.Job;
 import com.example.assignmentapi.Entities.Temp;
 import com.example.assignmentapi.Repositories.JobRepository;
@@ -10,7 +11,8 @@ import com.example.assignmentapi.Repositories.TempRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,14 +24,23 @@ public class JobService {
     @Autowired
     TempRepository tempRepository;
 
+    // Create a DTO of job with assigned temp
+    public JobWithTemp createJobWithTemp (Job job) {
+        if (job != null) {
+            Temp fetchedTemp = job.getTemp();
+            return new JobWithTemp(job, fetchedTemp != null ? new TempAsChild(fetchedTemp) : null);
+        }
+        return null;
+    }
+
+    // Returns true or false for if a given temp is available for a specific time frame
     public Boolean checkAvailability (Integer tempId, Long startDate, Long endDate) {
-        // Check if a specified temp is available for a job in the date range provided
         List<Integer> availableTemps = this.tempRepository.findByDates(startDate, endDate);
         return availableTemps.contains(tempId);
     }
 
-    public JobGetDTO create(JobCreateDTO data) {
-        // Create a new job in the database
+    // Create a new job in the DB
+    public JobWithTemp create(JobCreateData data) {
         Job job;
         if (data.getTempId() != null) {
             // If a tempId is provided, check if temp is available for this job, if not return bad request
@@ -45,45 +56,39 @@ public class JobService {
         }
         // Save job to DB and send representation to client
         this.repository.save(job);
-        return new JobGetDTO(job);
+        return createJobWithTemp(job);
     }
 
-    public ArrayList<JobGetDTO> all() {
-        // Get all jobs from DB
-        ArrayList<Job> jobEntities = new ArrayList<>(this.repository.findAll());
-        ArrayList<JobGetDTO> jobGetDTOs = new ArrayList<>();
+    // Get a list of all jobs as DTOs including their assigned temps
+    public List<JobWithTemp> getAll() {
+        List<Job> jobEntities = this.repository.findAll();
         // Create representations and send to client
-        for (Job job : jobEntities) {
-            jobGetDTOs.add(new JobGetDTO(job));
-        }
-        return jobGetDTOs;
+        List<JobWithTemp> jobs = jobEntities
+                .stream()
+                .map(this::createJobWithTemp)
+                .toList();
+        return jobs.isEmpty() ? Collections.emptyList() : jobs;
     }
 
-    public ArrayList<JobGetDTO> getByAssigned(Boolean assigned) {
-        // List Jobs based on whether they're assigned to a temp
-        ArrayList<Job> jobEntities = new ArrayList<>();
-        ArrayList<JobGetDTO> jobGetDTOs = new ArrayList<>();
-        if (assigned) {
-            jobEntities.addAll(this.repository.findByIsAssigned());
-        } else {
-            jobEntities.addAll(this.repository.findByIsNotAssigned());
-        }
+    // Get a list of either all assigned or unassigned jobs
+    public List<JobWithTemp> getByAssigned(Boolean assigned) {
+        List<Job> jobEntities = assigned ? this.repository.findByIsAssigned() : this.repository.findByIsNotAssigned();
         // Create representations and send to client
-        for (Job job : jobEntities) {
-            jobGetDTOs.add(new JobGetDTO(job));
-        }
-        return jobGetDTOs;
+        return jobEntities
+                .stream()
+                .map(this::createJobWithTemp)
+                .toList();
     }
 
-    public JobGetDTO getById(Integer id) {
-        // Get a single job from DB
+    // Returns a DTO of a specific job with assigned temp
+    public JobWithTemp getById(Integer id) {
         Optional<Job> fetchedJob = this.repository.findById(id);
-        // If the job exists, send representation to client, otherwise 404
-        return fetchedJob.map(JobGetDTO::new).orElse(null);
+        // If the job exists, send representation to client, otherwise send null
+        return fetchedJob.map(this::createJobWithTemp).orElse(null);
     }
 
-    public JobGetDTO update(Integer id, JobUpdateDTO data) {
-        // Update job in DB
+    // Updates the job in the DB - used to assign a temp/change any details
+    public JobWithTemp update(Integer id, JobUpdateData data) {
         // Check if job specified exists
         Optional<Job> fetchedJob = this.repository.findById(id);
         if (fetchedJob.isPresent()) {
@@ -112,7 +117,8 @@ public class JobService {
                 }
             }
             // Save job to DB and send representation to client
-            return new JobGetDTO(this.repository.save(job));
+            this.repository.save(job);
+            return createJobWithTemp(job);
         }
         // No job exists, send bad request
         return null;
