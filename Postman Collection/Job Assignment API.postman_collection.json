@@ -1,0 +1,260 @@
+{
+	"info": {
+		"_postman_id": "0d5d3a5a-782e-4444-8102-c155bc4442e9",
+		"name": "Job Assignment API",
+		"description": "## Summary\n\nYour task is to build a Resourcing API using the Java Spring Boot framework, that allows consumers to assign temps to jobs.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21624819"
+	},
+	"item": [
+		{
+			"name": "Temps",
+			"item": [
+				{
+					"name": "Create a temp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Chris\",\r\n    \"lastName\": \"test\",\r\n    \"managerId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/temps",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"temps"
+							]
+						},
+						"description": "Creates a new temp"
+					},
+					"response": []
+				},
+				{
+					"name": "List all temps",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Get a list of all temps"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a temp by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/temps/3",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"temps",
+								"3"
+							]
+						},
+						"description": "Get a specific temp by tempId"
+					},
+					"response": []
+				},
+				{
+					"name": "Get temps available for job",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/temps?jobId=3",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"temps"
+							],
+							"query": [
+								{
+									"key": "jobId",
+									"value": "3"
+								}
+							]
+						},
+						"description": "Get a list of temps available for the timeframe of the job specified by jobId"
+					},
+					"response": []
+				},
+				{
+					"name": "Get hierarchy tree",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/temps/tree",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"temps",
+								"tree"
+							]
+						},
+						"description": "Get a full hierarchy tree representing the nested set of temps"
+					},
+					"response": []
+				}
+			],
+			"description": "Temps who can have multiple jobs assigned at one time as long as their timeframes do not conflict. Can manage other temps."
+		},
+		{
+			"name": "Jobs",
+			"item": [
+				{
+					"name": "Create a job",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"job8\",\r\n    \"startDate\": 1,\r\n    \"endDate\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/jobs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"jobs"
+							]
+						},
+						"description": "Create a new job"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch a job",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tempId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/jobs/5",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"jobs",
+								"5"
+							]
+						},
+						"description": "Edit an existing job - used to assigne temps"
+					},
+					"response": []
+				},
+				{
+					"name": "List all jobs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/jobs",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"jobs"
+							]
+						},
+						"description": "Get a list of all temps"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a job by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "Get a specific job by jobId"
+					},
+					"response": []
+				},
+				{
+					"name": "List assigned jobs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/jobs?assigned=true",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"jobs"
+							],
+							"query": [
+								{
+									"key": "assigned",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Get a list of jobs that have an assigned temp"
+					},
+					"response": []
+				},
+				{
+					"name": "List unassigned jobs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/jobs?assigned=false",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"jobs"
+							],
+							"query": [
+								{
+									"key": "assigned",
+									"value": "false"
+								}
+							]
+						},
+						"description": "StartFragment\n\nGet a list of jobs that do not have an assigned temp"
+					},
+					"response": []
+				}
+			],
+			"description": "Jobs can be unassigned or have one temp assigned"
+		}
+	]
+}
