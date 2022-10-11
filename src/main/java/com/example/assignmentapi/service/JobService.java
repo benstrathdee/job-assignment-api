@@ -1,9 +1,9 @@
 package com.example.assignmentapi.Services;
 
-import com.example.assignmentapi.DTOs.Job.JobCreateData;
-import com.example.assignmentapi.DTOs.Job.JobWithTemp;
-import com.example.assignmentapi.DTOs.Job.JobUpdateData;
-import com.example.assignmentapi.DTOs.Temp.TempAsChild;
+import com.example.assignmentapi.dto.Job.JobCreateData;
+import com.example.assignmentapi.dto.Job.JobWithTemp;
+import com.example.assignmentapi.dto.Job.JobUpdateData;
+import com.example.assignmentapi.dto.Temp.TempAsChild;
 import com.example.assignmentapi.Entities.Job;
 import com.example.assignmentapi.Entities.Temp;
 import com.example.assignmentapi.Repositories.JobRepository;
