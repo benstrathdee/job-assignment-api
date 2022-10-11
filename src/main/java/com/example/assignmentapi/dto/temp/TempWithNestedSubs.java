@@ -1,18 +1,15 @@
-package com.example.assignmentapi.DTOs.Temp;
+package com.example.assignmentapi.dto.temp;
 
-import com.example.assignmentapi.Entities.Temp;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 public class TempWithNestedSubs extends TempAsChild {
     private final List<TempWithNestedSubs> subordinates;
 
-    public List<TempWithNestedSubs> getSubordinates() {
-        return subordinates;
-    }
-
-    public TempWithNestedSubs(Temp temp, List<TempWithNestedSubs> subordinates) {
-        super(temp);
+    public TempWithNestedSubs(Integer id, String firstName, String lastName, List<TempWithNestedSubs> subordinates) {
+        super(id, firstName, lastName);
         this.subordinates = subordinates;
     }
 }

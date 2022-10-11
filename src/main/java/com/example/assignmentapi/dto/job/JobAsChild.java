@@ -1,33 +1,13 @@
-package com.example.assignmentapi.DTOs.Job;
+package com.example.assignmentapi.dto.job;
 
-import com.example.assignmentapi.Entities.Job;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class JobAsChild {
     private final Integer id;
     private final String name;
     private final Long startDate;
     private final Long endDate;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Long getStartDate() {
-        return startDate;
-    }
-
-    public Long getEndDate() {
-        return endDate;
-    }
-
-    public JobAsChild(Job job) {
-        this.id = job.getId();
-        this.name = job.getName();
-        this.startDate = job.getStartDate();
-        this.endDate = job.getEndDate();
-    }
 }

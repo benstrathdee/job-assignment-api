@@ -1,29 +1,17 @@
-package com.example.assignmentapi.DTOs.Job;
+package com.example.assignmentapi.dto.job;
+
+import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
+@Getter
 public class JobCreateData {
     @NotBlank
     private String name;
-    @NotBlank
+    @NotNull
     private Long startDate;
-    @NotBlank
+    @NotNull
     private Long endDate;
     private Integer tempId;
-
-    public String getName() {
-        return name;
-    }
-
-    public Long getStartDate() {
-        return startDate;
-    }
-
-    public Long getEndDate() {
-        return endDate;
-    }
-
-    public Integer getTempId() {
-        return tempId;
-    }
 }

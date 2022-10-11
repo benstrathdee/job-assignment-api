@@ -1,9 +1,15 @@
-package com.example.assignmentapi.Entities;
+package com.example.assignmentapi.entity;
+
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "temps")
 public class Temp {
@@ -14,52 +20,12 @@ public class Temp {
     private String firstName;
     @NotBlank
     private String lastName;
-    @NotBlank
+    @NotNull
     private Integer leftVal;
-    @NotBlank
+    @NotNull
     private Integer rightVal;
     @OneToMany(mappedBy = "temp", fetch = FetchType.LAZY)
     private Set<Job> jobs;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Integer getLeftVal() {
-        return leftVal;
-    }
-
-    public void setLeftVal(Integer leftVal) {
-        this.leftVal = leftVal;
-    }
-
-    public Integer getRightVal() {
-        return rightVal;
-    }
-
-    public void setRightVal(Integer rightVal) {
-        this.rightVal = rightVal;
-    }
-
-    public Set<Job> getJobs() {
-        return this.jobs;
-    }
 
     public Temp (String firstName, String lastName, Integer leftVal, Integer rightVal) {
         this.firstName = firstName;
@@ -68,7 +34,4 @@ public class Temp {
         this.rightVal = rightVal;
     }
 
-    public Temp () {
-        super();
-    }
 }

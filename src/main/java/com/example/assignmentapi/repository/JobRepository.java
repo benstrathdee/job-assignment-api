@@ -1,10 +1,10 @@
-package com.example.assignmentapi.Repositories;
+package com.example.assignmentapi.repository;
 
-import com.example.assignmentapi.Entities.Job;
-import org.jetbrains.annotations.NotNull;
+import com.example.assignmentapi.entity.Job;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 

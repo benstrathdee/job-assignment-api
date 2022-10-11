@@ -1,24 +1,11 @@
-package com.example.assignmentapi.DTOs.Job;
+package com.example.assignmentapi.dto.job;
 
+import lombok.Getter;
+
+@Getter
 public class JobUpdateData {
     private String name;
     private Long startDate;
     private Long endDate;
     private Integer tempId;
-
-    public String getName() {
-        return name;
-    }
-
-    public Long getStartDate() {
-        return startDate;
-    }
-
-    public Long getEndDate() {
-        return endDate;
-    }
-
-    public Integer getTempId() {
-        return tempId;
-    }
 }

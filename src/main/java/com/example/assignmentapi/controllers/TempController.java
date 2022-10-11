@@ -1,61 +1,74 @@
-package com.example.assignmentapi.Controllers;
+package com.example.assignmentapi.controllers;
 
-import com.example.assignmentapi.DTOs.Temp.TempCreateData;
-import com.example.assignmentapi.DTOs.Temp.TempWithJobs;
-import com.example.assignmentapi.DTOs.Temp.TempWithNestedSubs;
-import com.example.assignmentapi.DTOs.Temp.TempWithSubsAndJobs;
-import com.example.assignmentapi.Services.TempService;
+import com.example.assignmentapi.dto.temp.TempCreateData;
+import com.example.assignmentapi.dto.temp.TempWithJobs;
+import com.example.assignmentapi.dto.temp.TempWithNestedSubs;
+import com.example.assignmentapi.dto.temp.TempWithSubsAndJobs;
+import com.example.assignmentapi.service.TempService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
 @RequestMapping(path="/temps")
 public class TempController {
     @Autowired
-    TempService service;
-
+    TempService tempService;
 
     // POST /temps
         // Create a temp from data in request body
     @PostMapping
-    public ResponseEntity<TempWithJobs> createTemp (@Valid @RequestBody TempCreateData data) {
-        TempWithJobs temp = this.service.create(data);
-        return new ResponseEntity<>(temp, temp != null ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Object> createTemp (@Valid @RequestBody TempCreateData data) {
+        TempWithJobs temp = tempService.createTemp(data);
+        if (temp != null) {
+            return ResponseEntity.ok(temp);
+        } else {
+            return ResponseEntity.badRequest().body(
+                    "Bad request - there was likely an issue with the provided data."
+            );
+        }
+
     }
 
     // GET /temps
         // List all temps
-    // GET /temps?jobId={jobId}
+    // GET /temps?jobId={id}
         // List temps that are available for the job with jobId based on the jobs date range
     @GetMapping
-    public ResponseEntity<List<TempWithJobs>> getTemps (@Valid @RequestParam(required = false) Integer jobId) {
+    public ResponseEntity<List<TempWithJobs>> getTemps (
+            @RequestParam(name = "jobId", required = false) Integer jobId
+    ) {
         List<TempWithJobs> temps;
         if (jobId != null) {
-            temps = this.service.getAvailable(jobId);
+            temps = tempService.getAvailable(jobId);
         } else {
-            temps = this.service.getAll();
+            temps = tempService.getAllTemps();
         }
-        return new ResponseEntity<>(temps, temps != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok(temps);
     }
 
-    // GET /temps/{id}
+
+    // GET /temps/{tempId}
         // Get temp by id
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<TempWithSubsAndJobs> getTemp (@PathVariable Integer id) {
-        TempWithSubsAndJobs temp = this.service.getIndividual(id);
-        return new ResponseEntity<>(temp, temp != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    @GetMapping(path = "/{tempId}")
+    public ResponseEntity<Object> getTempById (@NotNull @PathVariable(name = "tempId") Integer tempId) {
+        TempWithSubsAndJobs temp = tempService.getTempById(tempId);
+        if (temp != null) {
+            return ResponseEntity.ok(temp);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // GET /temps/tree
         // Get full hierarchy tree
     @GetMapping(path = "/tree")
-    public ResponseEntity<List<TempWithNestedSubs>> getTree () {
-        List<TempWithNestedSubs> tree = this.service.getHierarchy();
-        return new ResponseEntity<>(tree, tree != null ? HttpStatus.OK : HttpStatus.NOT_FOUND);
+    public ResponseEntity<List<TempWithNestedSubs>> getTempHierarchy () {
+        List<TempWithNestedSubs> tree = tempService.getTempHierarchy();
+        return ResponseEntity.ok(tree);
     }
 }

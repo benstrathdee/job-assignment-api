@@ -1,6 +1,6 @@
-package com.example.assignmentapi.Repositories;
+package com.example.assignmentapi.repository;
 
-import com.example.assignmentapi.Entities.Temp;
+import com.example.assignmentapi.entity.Temp;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -23,7 +23,7 @@ public interface TempRepository extends JpaRepository<Temp, Integer> {
 
     // Gets the highest rightVal in the table
     @Query(value = "SELECT MAX(right_val) FROM temps;", nativeQuery = true)
-    Optional<Integer> findHighestRightVal();
+    Optional<Integer> findMaxRightVal();
 
     // Find the temp with given leftVal
     Optional<Temp> findByLeftVal(Integer leftVal);

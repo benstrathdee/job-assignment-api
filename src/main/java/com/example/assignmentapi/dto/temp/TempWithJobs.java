@@ -1,19 +1,16 @@
-package com.example.assignmentapi.DTOs.Temp;
+package com.example.assignmentapi.dto.temp;
 
-import com.example.assignmentapi.DTOs.Job.JobAsChild;
-import com.example.assignmentapi.Entities.Temp;
+import com.example.assignmentapi.dto.job.JobAsChild;
+import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 public class TempWithJobs extends TempAsChild {
     private final List<JobAsChild> jobs;
 
-    public List<JobAsChild> getJobs() {
-        return jobs;
-    }
-
-    public TempWithJobs(Temp temp, List<JobAsChild> jobs) {
-        super(temp);
+    public TempWithJobs(Integer id, String firstName, String lastName, List<JobAsChild> jobs) {
+        super(id, firstName, lastName);
         this.jobs = jobs;
     }
 }

@@ -1,23 +1,14 @@
-package com.example.assignmentapi.DTOs.Temp;
+package com.example.assignmentapi.dto.temp;
+
+import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 
+@Getter
 public class TempCreateData {
     @NotBlank
     private String firstName;
     @NotBlank
     private String lastName;
     private Integer managerId;
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public Integer getManagerId() {
-        return managerId;
-    }
 }
