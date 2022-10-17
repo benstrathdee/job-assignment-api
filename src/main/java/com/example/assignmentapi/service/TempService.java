@@ -5,8 +5,7 @@ import com.example.assignmentapi.entity.Job;
 import com.example.assignmentapi.entity.Temp;
 import com.example.assignmentapi.repository.JobRepository;
 import com.example.assignmentapi.repository.TempRepository;
-import com.example.assignmentapi.utilities.DTOBuilder;
-import com.example.assignmentapi.utilities.TreeBuilder;
+import com.example.assignmentapi.utilities.DTODirector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +48,7 @@ public class TempService {
         // Save the new temp to the db
         Temp temp = new Temp(data.getFirstName(), data.getLastName(), leftVal, rightVal);
         tempRepository.save(temp);
-        return DTOBuilder.buildTempWithJobs(temp);
+        return DTODirector.buildTempWithJobs(temp, temp.getJobs());
     }
 
     // Get all temps in DB, return as DTOs including assigned jobs
@@ -57,7 +56,7 @@ public class TempService {
         List<Temp> fetchedTemps = tempRepository.findAll();
         return fetchedTemps
                 .stream()
-                .map(DTOBuilder::buildTempWithJobs)
+                .map(temp -> DTODirector.buildTempWithJobs(temp, temp.getJobs()))
                 .toList();
     }
 
@@ -68,7 +67,7 @@ public class TempService {
             Temp temp = fetchedTemp.get();
             List<Temp> subordinates = tempRepository.findNested(temp.getLeftVal(), temp.getRightVal());
 
-            return DTOBuilder.buildTempWithSubsAndJobs(temp, subordinates);
+            return DTODirector.buildTempWithSubsAndJobs(temp, subordinates, temp.getJobs());
         }
         return null;
     }
@@ -81,7 +80,7 @@ public class TempService {
         Optional<Integer> fetchedHighestRightVal = tempRepository.findMaxRightVal();
         if (fetchedHighestRightVal.isPresent()) {
             Integer highestRightVal = fetchedHighestRightVal.get();
-            hierarchy = TreeBuilder.buildTree(tempRepository, 1, highestRightVal);
+            hierarchy = DTODirector.buildTree(tempRepository, 1, highestRightVal);
         }
         return hierarchy;
     }
@@ -98,7 +97,7 @@ public class TempService {
                 Optional<Temp> fetchedTemp = tempRepository.findById(id);
                 if (fetchedTemp.isPresent()) {
                     Temp temp = fetchedTemp.get();
-                    availableTempDTOs.add(DTOBuilder.buildTempWithJobs(temp));
+                    availableTempDTOs.add(DTODirector.buildTempWithJobs(temp, temp.getJobs()));
                 }
             }
         }

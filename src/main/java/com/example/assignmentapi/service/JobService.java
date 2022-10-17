@@ -7,7 +7,7 @@ import com.example.assignmentapi.entity.Job;
 import com.example.assignmentapi.entity.Temp;
 import com.example.assignmentapi.repository.JobRepository;
 import com.example.assignmentapi.repository.TempRepository;
-import com.example.assignmentapi.utilities.DTOBuilder;
+import com.example.assignmentapi.utilities.DTODirector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -48,7 +48,7 @@ public class JobService {
         }
         // Save job to DB and send representation to client
         jobRepository.save(job);
-        return DTOBuilder.buildJobWithTemp(job);
+        return DTODirector.buildJobWithTemp(job, job.getTemp());
     }
 
     // Get a list of all jobs as DTOs including their assigned temps
@@ -58,7 +58,7 @@ public class JobService {
         // Create representations and send to client
         return jobEntities
                 .stream()
-                .map(DTOBuilder::buildJobWithTemp)
+                .map(job -> DTODirector.buildJobWithTemp(job, job.getTemp()))
                 .toList();
     }
 
@@ -71,7 +71,7 @@ public class JobService {
         // Create representations and send to client
         return jobEntities
                 .stream()
-                .map(DTOBuilder::buildJobWithTemp)
+                .map(job -> DTODirector.buildJobWithTemp(job, job.getTemp()))
                 .toList();
     }
 
@@ -80,7 +80,8 @@ public class JobService {
         Optional<Job> fetchedJob = jobRepository.findById(id);
 
         // If the job exists, send representation to client, otherwise send null
-        return fetchedJob.map(DTOBuilder::buildJobWithTemp).orElse(null);
+        return fetchedJob.map(job -> DTODirector.buildJobWithTemp(job, job.getTemp()))
+                .orElse(null);
     }
 
     // Updates the job in the DB - used to assign a temp/change any details
@@ -115,7 +116,7 @@ public class JobService {
             }
             // Save job to DB and send representation to client
             jobRepository.save(job);
-            return DTOBuilder.buildJobWithTemp(job);
+            return DTODirector.buildJobWithTemp(job, job.getTemp());
         }
         // No job exists, send bad request
         return null;

@@ -1,8 +1,9 @@
 package com.example.assignmentapi.dto.temp;
 
 import com.example.assignmentapi.dto.job.JobAsChild;
-import com.example.assignmentapi.entity.Temp;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Singular;
 
 import java.util.List;
 
@@ -10,7 +11,8 @@ import java.util.List;
 public class TempWithSubsAndJobs extends TempWithJobs {
     private final List<TempAsChild> subordinates;
 
-    public TempWithSubsAndJobs(Integer id, String firstName, String lastName, List<TempAsChild> subordinates, List<JobAsChild> jobs) {
+    @Builder(builderMethodName = "tempWithSubsAndJobsBuilder")
+    public TempWithSubsAndJobs(Integer id, String firstName, String lastName, @Singular List<TempAsChild> subordinates, @Singular List<JobAsChild> jobs) {
         super(id, firstName, lastName, jobs);
         this.subordinates = subordinates;
     }
