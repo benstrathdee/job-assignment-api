@@ -1,25 +1,17 @@
 package com.example.assignmentapi.utilities;
 
-import com.example.assignmentapi.dto.job.JobAsChild;
-import com.example.assignmentapi.dto.job.JobWithTemp;
-import com.example.assignmentapi.dto.temp.TempAsChild;
-import com.example.assignmentapi.dto.temp.TempWithJobs;
-import com.example.assignmentapi.dto.temp.TempWithNestedSubs;
-import com.example.assignmentapi.dto.temp.TempWithSubsAndJobs;
+import com.example.assignmentapi.dto.job.JobReturnDTO;
+import com.example.assignmentapi.dto.temp.*;
 import com.example.assignmentapi.entity.Job;
 import com.example.assignmentapi.entity.Temp;
-import com.example.assignmentapi.repository.TempRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public final class DTODirector {
     // Creates a DTO of a Temp with no attached job
-    public static TempAsChild buildTemp(Temp temp) {
+    public static TempReturnDTO buildTemp(Temp temp) {
         if (temp != null) {
-            return TempAsChild.builder()
+            return TempReturnDTO.builder()
                     .id(temp.getId())
                     .firstName(temp.getFirstName())
                     .lastName(temp.getLastName())
@@ -29,9 +21,9 @@ public final class DTODirector {
     }
 
     // Create a DTO of a job with no attached temp
-    public static JobAsChild buildJob(Job job) {
+    public static JobReturnDTO buildJob(Job job) {
         if (job != null) {
-            return JobAsChild.builder()
+            return JobReturnDTO.builder()
                     .id(job.getId())
                     .name(job.getName())
                     .startDate(job.getStartDate())
@@ -42,91 +34,49 @@ public final class DTODirector {
     }
 
     // Creates a DTO of temp including any assigned jobs
-    public static TempWithJobs buildTempWithJobs(Temp temp, Set<Job> jobs) {
-        if (temp != null) {
-            TempWithJobs.TempWithJobsBuilder builder = TempWithJobs.tempWithJobsBuilder()
-                    .id(temp.getId())
-                    .firstName(temp.getFirstName())
-                    .lastName(temp.getLastName());
+    public static TempReturnDTO buildTempWithJobs(Temp temp, Set<Job> jobs) {
+        TempReturnDTO.Builder builder = TempReturnDTO.builder()
+                .id(temp.getId())
+                .firstName(temp.getFirstName())
+                .lastName(temp.getLastName());
 
-            if (jobs != null) {
-                jobs.forEach(job -> builder.job(DTODirector.buildJob(job)));
-            }
+        if (jobs != null) jobs.forEach(job -> builder.job(DTODirector.buildJob(job)));
 
-            return builder.build();
-        }
-        return null;
+        return builder.build();
     }
 
     // Create a DTO of job with assigned temp
-    public static JobWithTemp buildJobWithTemp(Job job, Temp temp) {
-        if (job != null) {
-            JobWithTemp.JobWithTempBuilder builder = JobWithTemp.jobWithTempBuilder()
-                    .id(job.getId())
-                    .name(job.getName())
-                    .startDate(job.getStartDate())
-                    .endDate(job.getEndDate());
+    public static JobReturnDTO buildJobWithTemp(Job job, Temp temp) {
+        JobReturnDTO.Builder builder = JobReturnDTO.builder()
+                .id(job.getId())
+                .name(job.getName())
+                .startDate(job.getStartDate())
+                .endDate(job.getEndDate())
+                .temp(DTODirector.buildTemp(temp));
 
-            builder.temp(DTODirector.buildTemp(temp));
-
-            return builder.build();
-        }
-        return null;
+        return builder.build();
     }
 
     // Creates a DTO of temp including any subordinates and assigned jobs
-    public static TempWithSubsAndJobs buildTempWithSubsAndJobs(Temp temp, List<Temp> subordinates, Set<Job> jobs) {
-        if (temp != null) {
-            TempWithSubsAndJobs.TempWithSubsAndJobsBuilder builder = TempWithSubsAndJobs.tempWithSubsAndJobsBuilder()
-                    .id(temp.getId())
-                    .firstName(temp.getFirstName())
-                    .lastName(temp.getLastName());
+    public static TempReturnDTO buildTempWithSubsAndJobs(Temp temp, List<Temp> subordinates, Set<Job> jobs) {
+        TempReturnDTO.Builder builder = TempReturnDTO.builder()
+                .id(temp.getId())
+                .firstName(temp.getFirstName())
+                .lastName(temp.getLastName());
 
-            if (subordinates != null) {
-                subordinates
-                        .forEach(sub -> builder.subordinate(DTODirector.buildTemp(sub)));
-            }
+        subordinates.forEach(sub -> builder.subordinate(DTODirector.buildTemp(sub)));
+        jobs.forEach(job -> builder.job(DTODirector.buildJob(job)));
 
-            if (jobs != null) {
-                jobs.forEach(job -> builder.job(DTODirector.buildJob(job)));
-            }
-
-            return builder.build();
-        }
-        return null;
+        return builder.build();
     }
 
-    // Recursively get direct children of a temp, building representation of a nested set
-    public static ArrayList<TempWithNestedSubs> buildTree(TempRepository repository, Integer leftVal, Integer rightVal) {
-        ArrayList<TempWithNestedSubs> children = new ArrayList<>();
-        while (leftVal < rightVal) {
-            Optional<Temp> fetchedTemp = repository.findByLeftVal(leftVal);
-            if (fetchedTemp.isPresent()) {
-                // Found a direct child
-                Temp temp = fetchedTemp.get();
-                TempWithNestedSubs.TempWithNestedSubsBuilder builder = TempWithNestedSubs.tempWithNestedSubsBuilder()
-                        .id(temp.getId())
-                        .firstName(temp.getFirstName())
-                        .lastName(temp.getLastName());
+    public static TempReturnDTO buildTempWithNestedSubs(Temp temp, List<TempReturnDTO> directSubordinates) {
+        TempReturnDTO.Builder builder = TempReturnDTO.builder()
+                .id(temp.getId())
+                .firstName(temp.getFirstName())
+                .lastName(temp.getLastName())
+                .directSubordinates(directSubordinates);
 
-                // Get this child's children (recursion!!!)
-                builder.subordinates(
-                    buildTree(
-                        repository,
-                        temp.getLeftVal() + 1,
-                        temp.getRightVal() - 1
-                    )
-                );
-
-                children.add(builder.build());
-
-                // Skip over this direct child's own children so that they're not added to the parent
-                leftVal = temp.getRightVal() + 1;
-            } else {
-                // Keep going until a direct child is found
-                leftVal ++;
-            }
-        }
-        return children;
+        return builder.build();
     }
 }

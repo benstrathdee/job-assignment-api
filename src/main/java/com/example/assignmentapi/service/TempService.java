@@ -1,6 +1,6 @@
 package com.example.assignmentapi.service;
 
-import com.example.assignmentapi.dto.temp.*;
+import  com.example.assignmentapi.dto.temp.*;
 import com.example.assignmentapi.entity.Job;
 import com.example.assignmentapi.entity.Temp;
 import com.example.assignmentapi.repository.JobRepository;
@@ -21,8 +21,12 @@ public class TempService {
     JobRepository jobRepository;
 
     // Creates a new temp in the DB and returns a representative DTO including any assigned jobs
-    public TempWithJobs createTemp(TempCreateData data) {
-        // Default nesting values
+    public TempReturnDTO createTemp(TempCreateData data) {
+        Temp.TempBuilder builder = Temp.builder()
+                .firstName(data.getFirstName())
+                .lastName(data.getLastName());
+
+        // Default nesting values, in case entry is first in DB
         int leftVal = 1;
         int rightVal = 2;
 
@@ -45,14 +49,14 @@ public class TempService {
                  rightVal = leftVal + 1;
              }
         }
-        // Save the new temp to the db
-        Temp temp = new Temp(data.getFirstName(), data.getLastName(), leftVal, rightVal);
+        // Finish building the temp
+        Temp temp = builder.leftVal(leftVal).rightVal(rightVal).build();
         tempRepository.save(temp);
         return DTODirector.buildTempWithJobs(temp, temp.getJobs());
     }
 
     // Get all temps in DB, return as DTOs including assigned jobs
-    public List<TempWithJobs> getAllTemps() {
+    public List<TempReturnDTO> getAllTemps() {
         List<Temp> fetchedTemps = tempRepository.findAll();
         return fetchedTemps
                 .stream()
@@ -61,7 +65,7 @@ public class TempService {
     }
 
     // Returns a DTO of an individual temp including assigned jobs and subordinates, found by ID
-    public TempWithSubsAndJobs getTempById(Integer id) {
+    public TempReturnDTO getTempById(Integer id) {
         Optional<Temp> fetchedTemp = tempRepository.findById(id);
         if (fetchedTemp.isPresent()) {
             Temp temp = fetchedTemp.get();
@@ -72,23 +76,42 @@ public class TempService {
         return null;
     }
 
+    public List<TempReturnDTO> getNestedBetween (Integer leftVal, Integer rightVal) {
+        List<TempReturnDTO> directSubordinates = new ArrayList<>();
+        while (leftVal < rightVal) {
+            Optional<Temp> fetchedTemp = tempRepository.findByLeftVal(leftVal);
+            if (fetchedTemp.isPresent()) {
+                // Found a direct child
+                Temp child = fetchedTemp.get();
+                directSubordinates.add(DTODirector.buildTempWithNestedSubs(child, getNestedBetween(child.getLeftVal() + 1, child.getRightVal())));
 
+                // Skip over this direct child's own children so that they're not added to the parent
+                leftVal = child.getRightVal() + 1;
+            } else {
+                // Keep going until a direct child is found
+                leftVal++;
+            }
+        }
+        return directSubordinates;
+    }
 
     // Get the full nested set hierarchy
-    public List<TempWithNestedSubs> getTempHierarchy() {
-        List<TempWithNestedSubs> hierarchy = Collections.emptyList();
+    public List<TempReturnDTO> getTempHierarchy() {
+        List<TempReturnDTO> hierarchy = new ArrayList<>();
         Optional<Integer> fetchedHighestRightVal = tempRepository.findMaxRightVal();
         if (fetchedHighestRightVal.isPresent()) {
+            // These values encapsulate the whole nested set
+            Integer leftVal = 1;
             Integer highestRightVal = fetchedHighestRightVal.get();
-            hierarchy = DTODirector.buildTree(tempRepository, 1, highestRightVal);
+            hierarchy.addAll(getNestedBetween(leftVal, highestRightVal));
         }
         return hierarchy;
     }
 
     // Gets a list of the available temps for the time frame of the given job
-    public ArrayList<TempWithJobs> getAvailable(Integer jobId) {
+    public List<TempReturnDTO> getAvailable(Integer jobId) {
         // Get temps that are available for a job in specific time range
-        ArrayList<TempWithJobs> availableTempDTOs = new ArrayList<>();
+        List<TempReturnDTO> availableTempDTOs = new ArrayList<>();
         Optional<Job> fetchedJob = jobRepository.findById(jobId);
         if (fetchedJob.isPresent()) {
             Job job = fetchedJob.get();

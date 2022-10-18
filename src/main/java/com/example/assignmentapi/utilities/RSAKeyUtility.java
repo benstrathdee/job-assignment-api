@@ -40,10 +40,9 @@ public final class RSAKeyUtility {
         // Ensure that the specified directory exists
         String path = file.getParent();
         if (path != null) {
-            String pathString = path.toString();
             try {
-                Files.createDirectory(Paths.get(pathString));
-                System.out.println("Created directory " + pathString + "/");
+                Files.createDirectory(Paths.get(path));
+                System.out.println("Created directory " + path + "/");
             } catch (FileAlreadyExistsException ignore) {
                 System.out.println("Directory already exists");
             } catch (IOException e) {

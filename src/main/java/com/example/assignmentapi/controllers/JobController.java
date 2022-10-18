@@ -1,7 +1,7 @@
 package com.example.assignmentapi.controllers;
 
 import com.example.assignmentapi.dto.job.JobCreateData;
-import com.example.assignmentapi.dto.job.JobWithTemp;
+import com.example.assignmentapi.dto.job.JobReturnDTO;
 import com.example.assignmentapi.dto.job.JobUpdateData;
 import com.example.assignmentapi.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class JobController {
         // Creates a job from data in request body
     @PostMapping
     public ResponseEntity<Object> createJob (@Valid @RequestBody JobCreateData data ) {
-        JobWithTemp job = jobService.createJob(data);
+        JobReturnDTO job = jobService.createJob(data);
         if (job != null) {
             return ResponseEntity.ok(job);
         } else {
@@ -35,7 +35,7 @@ public class JobController {
         // Updates job with id using data from request body
     @PatchMapping(path = "/{id}")
     public ResponseEntity<Object> updateJob (@PathVariable Integer id, @RequestBody JobUpdateData data ) {
-        JobWithTemp job = jobService.updateJob(id, data);
+        JobReturnDTO job = jobService.updateJob(id, data);
         if (job != null) {
             return ResponseEntity.ok(job);
         } else {
@@ -50,8 +50,8 @@ public class JobController {
     // GET /jobs?assigned={true|false}
         // Filter by whether a job is assigned to a temp or not
     @GetMapping
-    public ResponseEntity<List<JobWithTemp>> getJobs (@RequestParam(required = false) Boolean assigned ) {
-        List<JobWithTemp> jobs;
+    public ResponseEntity<List<JobReturnDTO>> getJobs (@RequestParam(required = false) Boolean assigned ) {
+        List<JobReturnDTO> jobs;
         if (assigned != null) {
             jobs = jobService.getJobsByAssigned(assigned);
         } else {
@@ -63,8 +63,8 @@ public class JobController {
     // GET /jobs/{id}
         // get the job with id
     @GetMapping(path = "/{id}")
-    public ResponseEntity<JobWithTemp> getJobById (@PathVariable Integer id ) {
-        JobWithTemp job = jobService.getJobById(id);
+    public ResponseEntity<JobReturnDTO> getJobById (@PathVariable Integer id ) {
+        JobReturnDTO job = jobService.getJobById(id);
         if (job != null) {
             return ResponseEntity.ok(job);
         } else {

@@ -1,5 +1,6 @@
 package com.example.assignmentapi.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,10 +24,11 @@ public class Job {
     private Long startDate;
     @NotNull
     private Long endDate;
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "temp_id")
     private Temp temp;
 
+    @Builder
     public Job(String name, Long startDate, Long endDate, Temp temp) {
         this.name = name;
         this.startDate = startDate;

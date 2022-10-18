@@ -27,6 +27,7 @@ public class Temp {
     @OneToMany(mappedBy = "temp", fetch = FetchType.LAZY)
     private Set<Job> jobs;
 
+    @Builder
     public Temp (String firstName, String lastName, Integer leftVal, Integer rightVal) {
         this.firstName = firstName;
         this.lastName = lastName;

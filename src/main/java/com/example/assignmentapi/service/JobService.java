@@ -1,7 +1,7 @@
 package com.example.assignmentapi.service;
 
 import com.example.assignmentapi.dto.job.JobCreateData;
-import com.example.assignmentapi.dto.job.JobWithTemp;
+import com.example.assignmentapi.dto.job.JobReturnDTO;
 import com.example.assignmentapi.dto.job.JobUpdateData;
 import com.example.assignmentapi.entity.Job;
 import com.example.assignmentapi.entity.Temp;
@@ -30,29 +30,29 @@ public class JobService {
     }
 
     // Create a new job in the DB
-    public JobWithTemp createJob(JobCreateData data) {
-        Job job;
+    public JobReturnDTO createJob(JobCreateData data) {
+        Job.JobBuilder builder = Job.builder()
+                .name(data.getName())
+                .startDate(data.getStartDate())
+                .endDate(data.getEndDate());
         if (data.getTempId() != null) {
             // If a tempId is provided, check if temp is available for this job, if not return bad request
             if (!checkAvailability(data.getTempId(), data.getStartDate(), data.getEndDate())) {
                 return null;
             }
 
-            // If available, create new job with temp assigned
+            // Temp available, add to job
             Optional<Temp> fetchedTemp = tempRepository.findById(data.getTempId());
-            job = new Job(data.getName(), data.getStartDate(), data.getEndDate(), fetchedTemp.orElse(null));
-
-        } else {
-            // No tempId provided, temp is null
-            job = new Job(data.getName(), data.getStartDate(), data.getEndDate(), null);
+            builder.temp(fetchedTemp.orElse(null));
         }
+        Job job = builder.build();
         // Save job to DB and send representation to client
         jobRepository.save(job);
         return DTODirector.buildJobWithTemp(job, job.getTemp());
     }
 
     // Get a list of all jobs as DTOs including their assigned temps
-    public List<JobWithTemp> getAllJobs() {
+    public List<JobReturnDTO> getAllJobs() {
         List<Job> jobEntities = jobRepository.findAll();
 
         // Create representations and send to client
@@ -63,7 +63,7 @@ public class JobService {
     }
 
     // Get a list of either all assigned or unassigned jobs
-    public List<JobWithTemp> getJobsByAssigned(Boolean assigned) {
+    public List<JobReturnDTO> getJobsByAssigned(Boolean assigned) {
         List<Job> jobEntities = assigned
                 ? jobRepository.findByIsAssigned()
                 : jobRepository.findByIsNotAssigned();
@@ -76,7 +76,7 @@ public class JobService {
     }
 
     // Returns a DTO of a specific job with assigned temp
-    public JobWithTemp getJobById(Integer id) {
+    public JobReturnDTO getJobById(Integer id) {
         Optional<Job> fetchedJob = jobRepository.findById(id);
 
         // If the job exists, send representation to client, otherwise send null
@@ -85,7 +85,7 @@ public class JobService {
     }
 
     // Updates the job in the DB - used to assign a temp/change any details
-    public JobWithTemp updateJob(Integer id, JobUpdateData data) {
+    public JobReturnDTO updateJob(Integer id, JobUpdateData data) {
         // Check if job specified exists
         Optional<Job> fetchedJob = jobRepository.findById(id);
         if (fetchedJob.isPresent()) {
