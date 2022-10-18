@@ -7,10 +7,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @RestController
@@ -22,8 +24,9 @@ public class AuthController {
     // User is just the details set as an in-memory user in the WebSecurityConfig
     // This end point is configured to use HTTP Basic Auth,
     // which is an Authorization header with value "Basic {base64 encoded user:password}
+    @CrossOrigin(origins = "http://127.0.0.1:5173") // allow cross-origin calls from this address (default Vite react app)
     @PostMapping(path = "/login")
-    public ResponseEntity<String> getToken(Authentication authentication) {
+    public ResponseEntity<Object> getToken(Authentication authentication) {
         if (authentication != null) {
             Instant now = Instant.now();
             long expiry = 600L; // How long until the JWT will expire
@@ -47,7 +50,7 @@ public class AuthController {
             // Return a response with the JWT as a string, the client then needs to implement this in
             // an Authorization header with value "Bearer {JWT}"
             String token = this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(Collections.singletonMap("token", token));
         }
         return ResponseEntity.badRequest().body("User Credentials not received");
     }
