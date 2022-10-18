@@ -35,7 +35,7 @@ public class WebSecurityConfig {
 //                .requiresChannel().anyRequest().requiresSecure() // Note 1
 //                .and()
                 .authorizeHttpRequests(requests -> requests
-                        .antMatchers("/authenticate").permitAll() // allow un-authed requests to this endpoint
+                        .antMatchers("/login").permitAll() // allow un-authed requests to this endpoint
                         .anyRequest().authenticated() // all other requests need to be authorised
                 )
                 .csrf().ignoringAntMatchers("/login") // this is necessary for making a post to this endpoint for authentication from a different domain name (or for testing with Postman)
