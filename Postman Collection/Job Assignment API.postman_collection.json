@@ -25,11 +25,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/temps",
+							"raw": "{{BASE_URL}}/temps",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"temps"
 							]
@@ -43,6 +42,15 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/temps",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"temps"
+							]
+						},
 						"description": "Get a list of all temps"
 					},
 					"response": []
@@ -53,14 +61,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/temps/3",
+							"raw": "{{BASE_URL}}/temps/1",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"temps",
-								"3"
+								"1"
 							]
 						},
 						"description": "Get a specific temp by tempId"
@@ -73,11 +80,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/temps?jobId=3",
+							"raw": "{{BASE_URL}}/temps?jobId=3",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"temps"
 							],
@@ -98,11 +104,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/temps/tree",
+							"raw": "{{BASE_URL}}/temps/tree",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"temps",
 								"tree"
@@ -133,11 +138,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/jobs",
+							"raw": "{{BASE_URL}}/jobs",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"jobs"
 							]
@@ -161,14 +165,13 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/jobs/5",
+							"raw": "{{BASE_URL}}/jobs/1",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"jobs",
-								"5"
+								"1"
 							]
 						},
 						"description": "Edit an existing job - used to assigne temps"
@@ -181,11 +184,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/jobs",
+							"raw": "{{BASE_URL}}/jobs",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"jobs"
 							]
@@ -199,6 +201,16 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/jobs/1",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"jobs",
+								"1"
+							]
+						},
 						"description": "Get a specific job by jobId"
 					},
 					"response": []
@@ -209,11 +221,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/jobs?assigned=true",
+							"raw": "{{BASE_URL}}/jobs?assigned=true",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"jobs"
 							],
@@ -234,11 +245,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/jobs?assigned=false",
+							"raw": "{{BASE_URL}}/jobs?assigned=false",
 							"host": [
-								"localhost"
+								"{{BASE_URL}}"
 							],
-							"port": "8080",
 							"path": [
 								"jobs"
 							],
@@ -255,6 +265,118 @@
 				}
 			],
 			"description": "Jobs can be unassigned or have one temp assigned"
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Get Bearer Token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{BEARER_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"const baseUrl = pm.collectionVariables.get(\"BASE_URL\");",
+					"const user = pm.collectionVariables.get(\"USER\");",
+					"const password = pm.collectionVariables.get(\"PASSWORD\");",
+					"",
+					"const basicAuth = btoa(`${user}:${password}`);",
+					"",
+					"pm.sendRequest({",
+					"    url: `${baseUrl}/login`,",
+					"    method: 'POST',",
+					"    header: {",
+					"        'Accept': 'application/json',",
+					"        'Authorization': `Basic ${basicAuth}`",
+					"    }",
+					"}, (err, res) => {",
+					"    pm.collectionVariables.set(\"BEARER_TOKEN\", res.text())",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "USER",
+			"value": "user",
+			"type": "string"
+		},
+		{
+			"key": "PASSWORD",
+			"value": "password",
+			"type": "string"
+		},
+		{
+			"key": "BEARER_TOKEN",
+			"value": ""
+		},
+		{
+			"key": "BASE_URL",
+			"value": "localhost:8080",
+			"type": "string"
 		}
 	]
 }

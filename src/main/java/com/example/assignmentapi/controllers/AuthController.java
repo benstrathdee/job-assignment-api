@@ -22,7 +22,7 @@ public class AuthController {
     // User is just the details set as an in-memory user in the WebSecurityConfig
     // This end point is configured to use HTTP Basic Auth,
     // which is an Authorization header with value "Basic {base64 encoded user:password}
-    @PostMapping(path = "/authenticate")
+    @PostMapping(path = "/login")
     public ResponseEntity<String> getToken(Authentication authentication) {
         if (authentication != null) {
             Instant now = Instant.now();

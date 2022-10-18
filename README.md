@@ -5,7 +5,7 @@ Your task is to build a Resourcing API using the Java Spring Boot framework, tha
 
 ## Endpoints
 
-* `POST` `/authenticate` - When a user posts a valid username + password using Basic Auth 
+* `POST` `/login` - When a user posts a valid username + password using Basic Auth 
 (User: "user", Password: "password"), server will return a JWT valid for 10 minutes. 
 This JWT needs to be included in an Authorization - Bearer token by the client for all other calls 
 * `POST` `/jobs` - Creates a job
@@ -69,8 +69,8 @@ This JWT needs to be included in an Authorization - Bearer token by the client f
 ## Notes
 
 ### JWT
-* Benefit of JWT implementation is that it's stateless: there's no need to store stuff in a DB
-and retrieve it each time, so requests are pretty quick
+* Benefit of JWT implementation is that it's stateless: user info needs to be stored in DB for login,
+after which no more checks need to be done to a DB
 * It's disadvantageous in that a JWT can not be revoked once it's been issued without making 
 a stateful solution, which then defeats the purpose
 * Most useful for situations like a single sign-on: e.g. an application that makes calls to a 

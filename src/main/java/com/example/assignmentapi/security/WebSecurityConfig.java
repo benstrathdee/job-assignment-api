@@ -38,7 +38,7 @@ public class WebSecurityConfig {
                         .antMatchers("/authenticate").permitAll() // allow un-authed requests to this endpoint
                         .anyRequest().authenticated() // all other requests need to be authorised
                 )
-                .csrf().ignoringAntMatchers("/authenticate") // this is necessary for making a post to this endpoint for authentication from a different domain name (or for testing with Postman)
+                .csrf().ignoringAntMatchers("/login") // this is necessary for making a post to this endpoint for authentication from a different domain name (or for testing with Postman)
                 .and()
                 .httpBasic(Customizer.withDefaults()) // Note 2
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt) // Note 3
