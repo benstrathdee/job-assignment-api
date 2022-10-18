@@ -66,11 +66,6 @@ This JWT needs to be included in an Authorization - Bearer token by the client f
 
 * JWT implementation - users should have to authenticate with a JWT when making requests
 
-# How to Use
-
-1. Clone this repo to local environment
-2. No RSA keys will
-
 ## Notes
 
 ### JWT
