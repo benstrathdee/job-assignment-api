@@ -70,7 +70,7 @@ public class WebSecurityConfig {
         return new InMemoryUserDetailsManager(
                 User.withUsername("user")
                         .password("{noop}password")
-                        .authorities("user")
+                        .authorities(Authorities.ADMIN.getTitle())
                         .build()
         );
     }
