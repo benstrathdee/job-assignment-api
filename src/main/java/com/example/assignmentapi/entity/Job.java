@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -18,11 +16,11 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotBlank
+    @Column(nullable = false)
     private String name;
-    @NotNull
+    @Column(nullable = false)
     private Long startDate;
-    @NotNull
+    @Column(nullable = false)
     private Long endDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "temp_id")

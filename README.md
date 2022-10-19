@@ -5,7 +5,7 @@ Your task is to build a Resourcing API using the Java Spring Boot framework, tha
 
 ## Endpoints
 
-* `POST` `/login` - When a user posts a valid username + password using Basic Auth 
+* `POST` `/auth/login` - When a user posts a valid username + password using Basic Auth 
 (User: "user", Password: "password"), server will return a JWT valid for 10 minutes. 
 This JWT needs to be included in an Authorization - Bearer token by the client for all other calls 
 * `POST` `/jobs` - Creates a job

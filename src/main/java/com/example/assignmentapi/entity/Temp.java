@@ -3,8 +3,6 @@ package com.example.assignmentapi.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Getter
@@ -16,13 +14,13 @@ public class Temp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotBlank
+    @Column(nullable = false)
     private String firstName;
-    @NotBlank
+    @Column(nullable = false)
     private String lastName;
-    @NotNull
+    @Column(nullable = false)
     private Integer leftVal;
-    @NotNull
+    @Column(nullable = false)
     private Integer rightVal;
     @OneToMany(mappedBy = "temp", fetch = FetchType.LAZY)
     private Set<Job> jobs;

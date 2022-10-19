@@ -6,6 +6,7 @@ import com.example.assignmentapi.dto.job.JobUpdateData;
 import com.example.assignmentapi.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,6 +21,7 @@ public class JobController {
     // POST /jobs
         // Creates a job from data in request body
     @PostMapping
+    @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<Object> createJob (@Valid @RequestBody JobCreateData data ) {
         JobReturnDTO job = jobService.createJob(data);
         if (job != null) {
@@ -34,6 +36,7 @@ public class JobController {
     // PATCH /jobs/{id}
         // Updates job with id using data from request body
     @PatchMapping(path = "/{id}")
+    @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
     public ResponseEntity<Object> updateJob (@PathVariable Integer id, @RequestBody JobUpdateData data ) {
         JobReturnDTO job = jobService.updateJob(id, data);
         if (job != null) {
@@ -50,6 +53,7 @@ public class JobController {
     // GET /jobs?assigned={true|false}
         // Filter by whether a job is assigned to a temp or not
     @GetMapping
+    @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
     public ResponseEntity<List<JobReturnDTO>> getJobs (@RequestParam(required = false) Boolean assigned ) {
         List<JobReturnDTO> jobs;
         if (assigned != null) {
@@ -63,6 +67,7 @@ public class JobController {
     // GET /jobs/{id}
         // get the job with id
     @GetMapping(path = "/{id}")
+    @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
     public ResponseEntity<JobReturnDTO> getJobById (@PathVariable Integer id ) {
         JobReturnDTO job = jobService.getJobById(id);
         if (job != null) {

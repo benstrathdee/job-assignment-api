@@ -6,6 +6,7 @@ import com.example.assignmentapi.service.TempService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,6 +23,7 @@ public class TempController {
         // Create a temp from data in request body
     @JsonView(Views.TempWithSubsAndJobs.class)
     @PostMapping
+    @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<Object> createTemp(@Valid @RequestBody TempCreateData data) {
         TempReturnDTO temp = tempService.createTemp(data);
         if (temp != null) {
@@ -40,9 +42,8 @@ public class TempController {
         // List temps that are available for the job with jobId based on the jobs date range
     @JsonView(Views.TempWithJobs.class)
     @GetMapping
-    public ResponseEntity<List<TempReturnDTO>> getTemps(
-            @RequestParam(name = "jobId", required = false) Integer jobId
-    ) {
+    @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
+    public ResponseEntity<List<TempReturnDTO>> getTemps(@RequestParam(name = "jobId", required = false) Integer jobId) {
         List<TempReturnDTO> temps;
         if (jobId != null) {
             temps = tempService.getAvailable(jobId);
@@ -57,6 +58,7 @@ public class TempController {
         // Get temp by id
     @JsonView(Views.TempWithSubsAndJobs.class)
     @GetMapping(path = "/{tempId}")
+    @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
     public ResponseEntity<Object> getTempById(@NotNull @PathVariable(name = "tempId") Integer tempId) {
         TempReturnDTO temp = tempService.getTempById(tempId);
         if (temp != null) {
@@ -70,6 +72,7 @@ public class TempController {
         // Get full hierarchy tree
     @JsonView(Views.TempWithSubs.class)
     @GetMapping(path = "/tree")
+    @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<List<TempReturnDTO>> getTempHierarchy() {
         List<TempReturnDTO> tree = tempService.getTempHierarchy();
         return ResponseEntity.ok(tree);
