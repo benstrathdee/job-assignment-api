@@ -31,23 +31,28 @@ public class TempService {
         int rightVal = 2;
 
         // Attempt to find any manager that might've been specified in the data
-        Optional<Temp> fetchedManager = tempRepository.findById(data.getManagerId());
-        if (fetchedManager.isPresent()) {
-            // Get position in nested table
-            Temp manager = fetchedManager.get();
-            leftVal = manager.getRightVal();
-            rightVal = manager.getRightVal() + 1;
-
-            // Update all temps in the table to create space for new temp in nested hierarchy
-            tempRepository.updateNestValues(manager.getRightVal());
-        } else {
+        if (data.getManagerId() == null) {
             // No manager for temp exists, will be inserted into table un-nested
-             Optional<Integer> fetchedHighestRight = tempRepository.findMaxRightVal();
-             if (fetchedHighestRight.isPresent()) {
-                 Integer highestRight = fetchedHighestRight.get();
-                 leftVal = highestRight + 1;
-                 rightVal = leftVal + 1;
-             }
+            // Check if there are other temps in the DB already, if so new temp will be inserted after
+            Optional<Integer> fetchedHighestRight = tempRepository.findMaxRightVal();
+            if (fetchedHighestRight.isPresent()) {
+                Integer highestRight = fetchedHighestRight.get();
+                leftVal = highestRight + 1;
+                rightVal = leftVal + 1;
+            }
+        } else {
+            Optional<Temp> fetchedManager = tempRepository.findById(data.getManagerId());
+            if (fetchedManager.isPresent()) {
+                // Get position in nested table
+                Temp manager = fetchedManager.get();
+                leftVal = manager.getRightVal();
+                rightVal = manager.getRightVal() + 1;
+
+                // Update all temps in the table to create space for new temp in nested hierarchy
+                tempRepository.updateNestValues(manager.getRightVal());
+            } else {
+                return null;
+            }
         }
         // Finish building the temp
         Temp temp = builder.leftVal(leftVal).rightVal(rightVal).build();
