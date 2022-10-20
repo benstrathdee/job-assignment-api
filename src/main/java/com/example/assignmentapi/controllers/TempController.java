@@ -26,14 +26,7 @@ public class TempController {
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<Object> createTemp(@Valid @RequestBody TempCreateData data) {
         TempReturnDTO temp = tempService.createTemp(data);
-        if (temp != null) {
-            return ResponseEntity.ok(temp);
-        } else {
-            return ResponseEntity.badRequest().body(
-                    "Bad request - there was likely an issue with the provided data."
-            );
-        }
-
+        return ResponseEntity.ok(temp);
     }
 
     // GET /temps
@@ -61,11 +54,7 @@ public class TempController {
     @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
     public ResponseEntity<Object> getTempById(@NotNull @PathVariable(name = "tempId") Integer tempId) {
         TempReturnDTO temp = tempService.getTempById(tempId);
-        if (temp != null) {
-            return ResponseEntity.ok(temp);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(temp);
     }
 
     // GET /temps/tree

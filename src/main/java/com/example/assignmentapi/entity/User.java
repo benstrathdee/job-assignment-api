@@ -18,11 +18,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotBlank
     @Column(nullable = false, unique = true)
     private String username;
-    @NotBlank
-    @Email
     @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)

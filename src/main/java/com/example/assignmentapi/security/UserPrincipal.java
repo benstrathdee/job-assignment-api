@@ -1,13 +1,20 @@
 package com.example.assignmentapi.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
 import java.util.*;
 
+@Builder
+@Getter
+@EqualsAndHashCode
+@AllArgsConstructor
 public class UserPrincipal implements UserDetails {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -27,39 +34,6 @@ public class UserPrincipal implements UserDetails {
     // Authorities are essentially roles that can be checked against (e.g. user/admin permissions)
     private final Collection<? extends GrantedAuthority> authorities;
 
-    @Builder
-    public UserPrincipal(Integer id, String username, String email, String password,
-                           Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.authorities = authorities;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-    public Integer id() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
     @Override
     public boolean isAccountNonExpired() {
         return true; // TODO
@@ -78,15 +52,5 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true; // TODO
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        UserPrincipal user = (UserPrincipal) o;
-        return Objects.equals(id, user.id);
     }
 }

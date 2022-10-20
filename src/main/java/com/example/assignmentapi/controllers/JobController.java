@@ -24,13 +24,7 @@ public class JobController {
     @PreAuthorize("hasAuthority('admin')")
     public ResponseEntity<Object> createJob (@Valid @RequestBody JobCreateData data ) {
         JobReturnDTO job = jobService.createJob(data);
-        if (job != null) {
-            return ResponseEntity.ok(job);
-        } else {
-            return ResponseEntity.badRequest().body(
-                    "Bad request - there was likely an issue with the provided data."
-            );
-        }
+        return ResponseEntity.ok(job);
     }
 
     // PATCH /jobs/{id}
@@ -39,13 +33,7 @@ public class JobController {
     @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
     public ResponseEntity<Object> updateJob (@PathVariable Integer id, @RequestBody JobUpdateData data ) {
         JobReturnDTO job = jobService.updateJob(id, data);
-        if (job != null) {
-            return ResponseEntity.ok(job);
-        } else {
-            return ResponseEntity.badRequest().body(
-                    "Bad request - there was likely an issue with the provided data."
-            );
-        }
+        return ResponseEntity.ok(job);
     }
 
     // GET /jobs
@@ -70,10 +58,6 @@ public class JobController {
     @PreAuthorize("hasAuthority('user') or hasAuthority('admin')")
     public ResponseEntity<JobReturnDTO> getJobById (@PathVariable Integer id ) {
         JobReturnDTO job = jobService.getJobById(id);
-        if (job != null) {
-            return ResponseEntity.ok(job);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(job);
     }
 }

@@ -31,8 +31,8 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 @Configuration
-@EnableGlobalMethodSecurity( // allows for the "@PreAuthorize" annotations on controllers
-        prePostEnabled = true
+@EnableGlobalMethodSecurity(
+        prePostEnabled = true // allows for the "@PreAuthorize" annotations on controllers
 )
 public class WebSecurityConfig {
     // Responsible for handling UserDetails which is what the DAOAuthenticationManager uses to manage users
@@ -79,9 +79,9 @@ public class WebSecurityConfig {
         http
 //                .requiresChannel().anyRequest().requiresSecure() // Note 1
 //                .and()
-//                .cors().and().csrf().disable() // not secure if API will be accessed with a browser, but good for testing
-                .cors().and().csrf().ignoringAntMatchers("/auth/**") // this is necessary for making a post to this endpoint for authentication from a different domain name (or for testing with Postman)
-                .and()
+                .cors().and().csrf().disable() // not secure if API will be accessed with a browser, but good for testing
+//                .cors().and().csrf().ignoringAntMatchers("/auth/**") // this is necessary for making a post to this endpoint for authentication from a different domain name (or for testing with Postman)
+//                .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless session management - JWTs

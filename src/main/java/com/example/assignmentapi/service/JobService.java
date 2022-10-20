@@ -5,6 +5,8 @@ import com.example.assignmentapi.dto.job.JobReturnDTO;
 import com.example.assignmentapi.dto.job.JobUpdateData;
 import com.example.assignmentapi.entity.Job;
 import com.example.assignmentapi.entity.Temp;
+import com.example.assignmentapi.exceptionhandling.ResourceNotFoundException;
+import com.example.assignmentapi.exceptionhandling.TempNotAvailableException;
 import com.example.assignmentapi.repository.JobRepository;
 import com.example.assignmentapi.repository.TempRepository;
 import com.example.assignmentapi.utilities.DTODirector;
@@ -35,18 +37,24 @@ public class JobService {
                 .name(data.getName())
                 .startDate(data.getStartDate())
                 .endDate(data.getEndDate());
+
         if (data.getTempId() != null) {
-            // If a tempId is provided, check if temp is available for this job, if not return bad request
-            if (!checkAvailability(data.getTempId(), data.getStartDate(), data.getEndDate())) {
-                return null;
+            // If a tempId is provided, check if temp is available for this job
+            Optional<Temp> fetchedTemp = tempRepository.findById(data.getTempId());
+            Boolean tempIsAvailable = checkAvailability(data.getTempId(), data.getStartDate(), data.getEndDate());
+
+            if (fetchedTemp.isEmpty() || !tempIsAvailable) {
+                // Temp not available, send bad request
+                throw new TempNotAvailableException(data.getTempId());
             }
 
             // Temp available, add to job
-            Optional<Temp> fetchedTemp = tempRepository.findById(data.getTempId());
-            builder.temp(fetchedTemp.orElse(null));
+            Temp temp = fetchedTemp.get();
+            builder.temp(temp);
         }
-        Job job = builder.build();
+
         // Save job to DB and send representation to client
+        Job job = builder.build();
         jobRepository.save(job);
         return DTODirector.buildJobWithTemp(job, job.getTemp());
     }
@@ -79,46 +87,55 @@ public class JobService {
     public JobReturnDTO getJobById(Integer id) {
         Optional<Job> fetchedJob = jobRepository.findById(id);
 
-        // If the job exists, send representation to client, otherwise send null
-        return fetchedJob.map(job -> DTODirector.buildJobWithTemp(job, job.getTemp()))
-                .orElse(null);
+        if (fetchedJob.isEmpty()) {
+            // Job doesn't exist, send 404
+            throw new ResourceNotFoundException();
+        }
+
+        // Return representation of job to client
+        Job job = fetchedJob.get();
+        return DTODirector.buildJobWithTemp(job, job.getTemp());
     }
 
     // Updates the job in the DB - used to assign a temp/change any details
     public JobReturnDTO updateJob(Integer id, JobUpdateData data) {
         // Check if job specified exists
         Optional<Job> fetchedJob = jobRepository.findById(id);
-        if (fetchedJob.isPresent()) {
-            // Update job for each field included in request body
-            Job job = fetchedJob.get();
-            if (data.getName() != null) {
-                job.setName(data.getName());
-            }
-            if (data.getStartDate() != null) {
-                job.setStartDate(data.getStartDate());
-            }
-            if (data.getEndDate() != null) {
-                job.setEndDate(data.getEndDate());
-            }
-            // The more complicated one because it needs to check availability for the job etc.
-            if (data.getTempId() != null) {
-                if (!checkAvailability(data.getTempId(), job.getStartDate(), job.getEndDate())) {
-                    // Not available, send bad request
-                    return null;
-                }
 
-                Optional<Temp> fetchedTemp = tempRepository.findById(data.getTempId());
-                if (fetchedTemp.isPresent()) {
-                    // Temp is present and available, assign to job
-                    Temp temp = fetchedTemp.get();
-                    job.setTemp(temp);
-                }
-            }
-            // Save job to DB and send representation to client
-            jobRepository.save(job);
-            return DTODirector.buildJobWithTemp(job, job.getTemp());
+        if (fetchedJob.isEmpty()) {
+            // No job exists, send 404
+            throw new ResourceNotFoundException();
         }
-        // No job exists, send bad request
-        return null;
+
+        // Update job for each field included in request body
+        Job job = fetchedJob.get();
+        if (data.getName() != null) {
+            job.setName(data.getName());
+        }
+        if (data.getStartDate() != null) {
+            job.setStartDate(data.getStartDate());
+        }
+        if (data.getEndDate() != null) {
+            job.setEndDate(data.getEndDate());
+        }
+
+        // The more complicated one because it needs to check availability for the job etc.
+        if (data.getTempId() != null) {
+            Optional<Temp> fetchedTemp = tempRepository.findById(data.getTempId());
+            Boolean tempIsAvailable = checkAvailability(data.getTempId(), job.getStartDate(), job.getEndDate());
+
+            if (fetchedTemp.isEmpty() || !tempIsAvailable) {
+                // Temp not available, send bad request
+                throw new TempNotAvailableException(data.getTempId());
+            }
+
+            // Temp is present and available, assign to job
+            Temp temp = fetchedTemp.get();
+            job.setTemp(temp);
+        }
+
+        // Save job to DB and send representation to client
+        jobRepository.save(job);
+        return DTODirector.buildJobWithTemp(job, job.getTemp());
     }
 }

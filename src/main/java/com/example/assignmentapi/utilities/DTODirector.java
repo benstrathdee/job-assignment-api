@@ -1,9 +1,9 @@
 package com.example.assignmentapi.utilities;
 
-import com.example.assignmentapi.dto.job.JobReturnDTO;
+import com.example.assignmentapi.dto.job.*;
 import com.example.assignmentapi.dto.temp.*;
-import com.example.assignmentapi.entity.Job;
-import com.example.assignmentapi.entity.Temp;
+import com.example.assignmentapi.dto.user.*;
+import com.example.assignmentapi.entity.*;
 
 import java.util.*;
 
@@ -31,6 +31,16 @@ public final class DTODirector {
                     .build();
         }
         return null;
+    }
+
+    // Create a DTO of a user with no password field
+    public static UserReturnDTO buildUser(User user) {
+        UserReturnDTO.Builder builder = UserReturnDTO.builder()
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole());
+
+        return builder.build();
     }
 
     // Creates a DTO of temp including any assigned jobs

@@ -11,13 +11,10 @@ import java.io.IOException;
 
 @Component
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
-
-    // TODO
-    // Can a redirect request of some sort be sent from here? i.e. redirect to /auth/login
-
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         System.err.println("Unauthorized error: " + authException.getMessage());
+        response.setHeader("WWW-Authenticate", "Bearer");
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
     }
 }
