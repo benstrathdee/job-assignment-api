@@ -64,7 +64,7 @@ public class AuthService {
 
         // Return representation of user to client
         User user = fetchedUser.get();
-        return DTODirector.buildUser(user);
+        return DTODirector.build(user);
     }
 
     // Log out a user by clearing their JWT cookie
@@ -92,6 +92,6 @@ public class AuthService {
         // Save user to DB and return representation to client (without password)
         User user = builder.build();
         userRepository.save(user);
-        return DTODirector.buildUser(user);
+        return DTODirector.build(user);
     }
 }

@@ -66,7 +66,7 @@ public class TempService {
                 .rightVal(rightVal)
                 .build();
         tempRepository.save(temp);
-        return DTODirector.buildTempWithJobs(temp, temp.getJobs());
+        return DTODirector.build(temp, temp.getJobs());
     }
 
     // Get all temps in DB, return as DTOs including assigned jobs
@@ -74,7 +74,7 @@ public class TempService {
         List<Temp> fetchedTemps = tempRepository.findAll();
         return fetchedTemps
                 .stream()
-                .map(temp -> DTODirector.buildTempWithJobs(temp, temp.getJobs()))
+                .map(temp -> DTODirector.build(temp, temp.getJobs()))
                 .toList();
     }
 
@@ -92,7 +92,7 @@ public class TempService {
         List<Temp> subordinates = tempRepository.findNested(temp.getLeftVal(), temp.getRightVal());
 
         // Create representation of temp and send to client
-        return DTODirector.buildTempWithSubsAndJobs(temp, subordinates, temp.getJobs());
+        return DTODirector.build(temp, subordinates, temp.getJobs());
     }
 
     public List<TempReturnDTO> getNestedBetween (Integer leftVal, Integer rightVal) {
@@ -108,7 +108,7 @@ public class TempService {
                 List<TempReturnDTO> childSubs = getNestedBetween(temp.getLeftVal() + 1, temp.getRightVal());
 
                 // Create a representation of the child and add to the list
-                TempReturnDTO child = DTODirector.buildTempWithNestedSubs(temp, childSubs);
+                TempReturnDTO child = DTODirector.build(temp, childSubs);
                 directSubordinates.add(child);
 
                 // Skip over this direct child's own children so that they're not added incorrectly to the parent
@@ -158,7 +158,7 @@ public class TempService {
             if (fetchedTemp.isPresent()) { // temp will always exist if it's in the loop
                 // Create a representation of the temp and add to list
                 Temp temp = fetchedTemp.get();
-                availableTempDTOs.add(DTODirector.buildTempWithJobs(temp, temp.getJobs()));
+                availableTempDTOs.add(DTODirector.build(temp, temp.getJobs()));
             }
         }
         return availableTempDTOs;

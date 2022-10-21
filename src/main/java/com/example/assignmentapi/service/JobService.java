@@ -56,7 +56,7 @@ public class JobService {
         // Save job to DB and send representation to client
         Job job = builder.build();
         jobRepository.save(job);
-        return DTODirector.buildJobWithTemp(job, job.getTemp());
+        return DTODirector.build(job, job.getTemp());
     }
 
     // Get a list of all jobs as DTOs including their assigned temps
@@ -66,7 +66,7 @@ public class JobService {
         // Create representations and send to client
         return jobEntities
                 .stream()
-                .map(job -> DTODirector.buildJobWithTemp(job, job.getTemp()))
+                .map(job -> DTODirector.build(job, job.getTemp()))
                 .toList();
     }
 
@@ -79,7 +79,7 @@ public class JobService {
         // Create representations and send to client
         return jobEntities
                 .stream()
-                .map(job -> DTODirector.buildJobWithTemp(job, job.getTemp()))
+                .map(job -> DTODirector.build(job, job.getTemp()))
                 .toList();
     }
 
@@ -94,7 +94,7 @@ public class JobService {
 
         // Return representation of job to client
         Job job = fetchedJob.get();
-        return DTODirector.buildJobWithTemp(job, job.getTemp());
+        return DTODirector.build(job, job.getTemp());
     }
 
     // Updates the job in the DB - used to assign a temp/change any details
@@ -136,6 +136,6 @@ public class JobService {
 
         // Save job to DB and send representation to client
         jobRepository.save(job);
-        return DTODirector.buildJobWithTemp(job, job.getTemp());
+        return DTODirector.build(job, job.getTemp());
     }
 }
