@@ -4,8 +4,11 @@ import com.example.assignmentapi.dto.job.*;
 import com.example.assignmentapi.dto.temp.*;
 import com.example.assignmentapi.dto.user.*;
 import com.example.assignmentapi.entity.*;
+import com.example.assignmentapi.security.UserPrincipal;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class DTODirector {
     // Create a DTO of a Temp with no attached job
@@ -33,12 +36,27 @@ public final class DTODirector {
         return null;
     }
 
-    // Create a DTO of a user with no password field
+    // Create a DTO of a user with no password field from a User entity
     public static UserReturnDTO build(User user) {
         UserReturnDTO.Builder builder = UserReturnDTO.builder()
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .role(user.getRole());
+
+        return builder.build();
+    }
+
+    // Create a DTO of a user with no password field from a UserPrincipal
+    public static UserReturnDTO build(UserPrincipal user) {
+        UserReturnDTO.Builder builder = UserReturnDTO.builder()
+                .username(user.getUsername())
+                .email(user.getEmail());
+
+        String role = user.getAuthorities().stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(" "));
+
+        builder.role(role);
 
         return builder.build();
     }

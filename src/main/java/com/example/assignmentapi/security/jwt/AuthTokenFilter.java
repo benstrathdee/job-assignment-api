@@ -1,7 +1,9 @@
 package com.example.assignmentapi.security.jwt;
 
+import com.example.assignmentapi.service.AuthService;
 import com.example.assignmentapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,31 +21,52 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private JwtUtils jwtUtils;
     @Autowired
     private UserService userService;
+    @Autowired
+    private AuthService authService;
+
+    // The name of the authToken cookie
+    @Value("${auth.token.auth}")
+    private String authCookieName;
+
+    // The name of the refresh claim
+    @Value("${auth.token.fingerprint}")
+    private String fingerprintName;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // This just checks if the URL contains "auth", because ideally this filter shouldn't
+        // be running for any /auth/** paths, but it still seems to anyway which makes unnecessary
+        // DB queries
+        boolean isAuth = request.getServletPath().contains("auth");
+        if (!isAuth) {
+            try {
+                String authToken = authService.getTokenFromCookies(request, authCookieName);
+                if (authToken != null && !authToken.equals("") && !isAuth) {
+                    String username = jwtUtils.getUserNameFromToken(authToken);
 
-        // TODO
-        // Investigate whether it's best practice to get this from a cookie or from Authorization header
+                    boolean jwtIsValid = jwtUtils.isJwtValid(authToken);
 
-        try {
-            String jwt = jwtUtils.getJwtFromCookies(request);
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                String username = jwtUtils.getUserNameFromJwtToken(jwt);
+                    String refreshClaim = jwtUtils.getClaimFromToken(fingerprintName, authToken);
+                    boolean jwtRefreshIsValid = userService.isUserRefreshFingerprintCorrect(username, refreshClaim);
 
-                UserDetails userDetails = userService.loadUserByUsername(username);
+                    if (jwtIsValid && jwtRefreshIsValid) {
+                        // JWT is completely valid - load user from data in token
+                        UserDetails userDetails = userService.loadUserByUsername(username);
 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
+                        // Authenticate user
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
 
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("Cannot set user authentication: " + e.getMessage());
             }
-        } catch (Exception e) {
-            System.err.println("Cannot set user authentication " + e);
         }
 
         filterChain.doFilter(request, response);

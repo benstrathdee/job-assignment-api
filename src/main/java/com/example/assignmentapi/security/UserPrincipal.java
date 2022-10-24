@@ -28,6 +28,8 @@ public class UserPrincipal implements UserDetails {
 
     private final String email;
 
+    private final String fingerprint;
+
     @JsonIgnore // don't risk ever returning this field
     private final String password;
 

@@ -6,8 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -26,6 +25,8 @@ public class User {
     private String password;
     @Column(nullable = false)
     private String role;
+    @Column
+    private String fingerprint;
     @OneToOne
     private Temp temp;
 
@@ -35,6 +36,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.fingerprint = UUID.randomUUID().toString();
         this.temp = temp;
     }
 }

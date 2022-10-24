@@ -4,6 +4,7 @@ import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.oauth2.jwt.BadJwtException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -21,7 +22,9 @@ public class ControllerExceptionHandler {
             TempNotAvailableException.class,
             UserDataExistsException.class,
             HttpMessageNotReadableException.class,
-            PropertyValueException.class
+            PropertyValueException.class,
+            BadRefreshException.class,
+            BadJwtException.class
     })
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public CustomErrorMessage badData(RuntimeException e, WebRequest request) {

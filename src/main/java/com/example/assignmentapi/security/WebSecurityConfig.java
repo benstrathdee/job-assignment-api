@@ -26,6 +26,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -77,28 +78,45 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
         http
-//                .requiresChannel().anyRequest().requiresSecure() // Note 1
+                // These lines would set the server to require all requests over HTTPS,
+                // but this requires a valid TLS certificate which I did not set up
+//                .requiresChannel().anyRequest().requiresSecure()
 //                .and()
-                .cors().and().csrf().disable() // not secure if API will be accessed with a browser, but good for testing
-//                .cors().and().csrf().ignoringAntMatchers("/auth/**") // this is necessary for making a post to this endpoint for authentication from a different domain name (or for testing with Postman)
-//                .and()
+
+                // this is necessary for making a post to this endpoint for authentication from a different domain name
+                // without an X-XSRF-TOKEN header
+                .cors().and().csrf().ignoringAntMatchers("/auth/**")
+                .and()
+
+                // defines how unauthorised access attempts are handled
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless session management - JWTs
+
+                // defines session creation - stateless because this uses JWT
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+
+                // only URLs matching this pattern do not require JWT authentication (this is where login details are POSTed to)
                 .authorizeRequests().antMatchers("/auth/**").permitAll()
-                .antMatchers("/**").permitAll()
-                .anyRequest().authenticated();
 
-        http.authenticationProvider(authenticationProvider()); // defines the bean used to provide authentication
+                // All other requests require JWT authentication
+                .anyRequest().authenticated()
+                .and()
 
-        http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class); // define the filter used before each request
+                // defines the bean used to provide authentication
+                .authenticationProvider(authenticationProvider())
+
+                // defines a filter used before each request, in this case for authenticating
+                .addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+
+                // Send a XSRF-TOKEN cookie to the client (which can then use it in an X-XSRF-TOKEN header to allow for requests
+                // that modify state (POST, PUT, DELETE and PATCH))
+                // Sends a new cookie with each successful response to a request, so it has to be updated each time a
+                // new modifying request is made
+                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
         return http.build();
     }
-
-    // Note 1
-    // These lines would set the server to require all requests over HTTPS, but this requires a valid TLS certificate which I did not set up
 
     // public + private keypair required for JWT encoding/decoding
     // If not found, you should run the main() method in RSAKeyUtility which will generate them
