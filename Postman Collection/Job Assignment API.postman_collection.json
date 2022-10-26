@@ -12,12 +12,23 @@
 			"item": [
 				{
 					"name": "Create a temp",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"Chris\",\r\n    \"lastName\": \"test\",\r\n    \"managerId\": 2\r\n}",
+							"raw": "{\r\n    \"firstName\": \"Chris\",\r\n    \"lastName\": \"test\",\r\n    \"managerId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -40,6 +51,9 @@
 				{
 					"name": "List all temps",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -61,13 +75,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/temps/1",
+							"raw": "{{BASE_URL}}/temps/20",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"temps",
-								"1"
+								"20"
 							]
 						},
 						"description": "Get a specific temp by tempId"
@@ -101,8 +115,17 @@
 				{
 					"name": "Get hierarchy tree",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{BASE_URL}}/temps/tree",
 							"host": [
@@ -118,19 +141,71 @@
 					"response": []
 				}
 			],
-			"description": "Temps who can have multiple jobs assigned at one time as long as their timeframes do not conflict. Can manage other temps."
+			"description": "Temps who can have multiple jobs assigned at one time as long as their timeframes do not conflict. Can manage other temps.",
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
 		},
 		{
 			"name": "Jobs",
 			"item": [
 				{
 					"name": "Create a job",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const xsrfCookie = postman.getResponseCookie(\"XSRF-TOKEN\");\r",
+									"pm.collectionVariables.set(\"XSRF_TOKEN\", xsrfCookie.value);\r",
+									"console.log(\"Saved XSRF_TOKEN variable\")\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{XSRF_TOKEN}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"job8\",\r\n    \"startDate\": 1,\r\n    \"endDate\": 4\r\n}",
+							"raw": "{\r\n    \"name\": \"job9\",\r\n    \"startDate\": 1,\r\n    \"endDate\": 4,\r\n    \"tempId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -152,9 +227,35 @@
 				},
 				{
 					"name": "Patch a job",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "PATCH",
-						"header": [],
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{XSRF_TOKEN}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n    \"tempId\": 1\r\n}",
@@ -180,7 +281,21 @@
 				},
 				{
 					"name": "List all jobs",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -202,13 +317,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/jobs/1",
+							"raw": "{{BASE_URL}}/jobs/20",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"jobs",
-								"1"
+								"20"
 							]
 						},
 						"description": "Get a specific job by jobId"
@@ -264,34 +379,59 @@
 					"response": []
 				}
 			],
-			"description": "Jobs can be unassigned or have one temp assigned"
+			"description": "Jobs can be unassigned or have one temp assigned",
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
 		},
 		{
 			"name": "Auth",
 			"item": [
 				{
-					"name": "Get Bearer Token",
+					"name": "Admin Log in",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const xsrfCookie = postman.getResponseCookie(\"XSRF-TOKEN\");\r",
+									"pm.collectionVariables.set(\"XSRF_TOKEN\", xsrfCookie.value);\r",
+									"console.log(\"Saved XSRF_TOKEN variable\")\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "password",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "user",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\r\n    \"username\": \"{{ADMIN_USER}}\",\r\n    \"password\": \"{{ADMIN_PASSWORD}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -299,52 +439,152 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/login",
+							"raw": "{{BASE_URL}}/auth/login",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
+								"auth",
 								"login"
 							]
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "User Log in",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"{{USER_USER}}\",\r\n    \"password\": \"{{USER_PASSWORD}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"testBadEmail2\",\r\n    \"email\": \"tes2t@test.test\",\r\n    \"password\": \"test\",\r\n    \"valid\" : \"no\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/register",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Log out",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/auth/logout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Tokens",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/auth/refresh",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		}
 	],
-	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{BEARER_TOKEN}}",
-				"type": "string"
-			}
-		]
-	},
 	"event": [
 		{
 			"listen": "prerequest",
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"const baseUrl = pm.collectionVariables.get(\"BASE_URL\");",
-					"const user = pm.collectionVariables.get(\"USER\");",
-					"const password = pm.collectionVariables.get(\"PASSWORD\");",
-					"",
-					"const basicAuth = btoa(`${user}:${password}`);",
-					"",
-					"pm.sendRequest({",
-					"    url: `${baseUrl}/login`,",
-					"    method: 'POST',",
-					"    header: {",
-					"        'Accept': 'application/json',",
-					"        'Authorization': `Basic ${basicAuth}`",
-					"    }",
-					"}, (err, res) => {",
-					"    pm.collectionVariables.set(\"BEARER_TOKEN\", res.text())",
-					"});"
+					""
 				]
 			}
 		},
@@ -353,6 +593,9 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
+					"const xsrfCookie = postman.getResponseCookie(\"XSRF-TOKEN\");",
+					"pm.collectionVariables.set(\"XSRF_TOKEN\", xsrfCookie.value);",
+					"console.log(\"Saved XSRF_TOKEN variable\")",
 					""
 				]
 			}
@@ -360,23 +603,33 @@
 	],
 	"variable": [
 		{
-			"key": "USER",
+			"key": "BASE_URL",
+			"value": "localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "ADMIN_USER",
 			"value": "user",
 			"type": "string"
 		},
 		{
-			"key": "PASSWORD",
+			"key": "ADMIN_PASSWORD",
 			"value": "password",
 			"type": "string"
 		},
 		{
-			"key": "BEARER_TOKEN",
-			"value": ""
+			"key": "USER_USER",
+			"value": "clairetest",
+			"type": "string"
 		},
 		{
-			"key": "BASE_URL",
-			"value": "localhost:8080",
+			"key": "USER_PASSWORD",
+			"value": "password",
 			"type": "string"
+		},
+		{
+			"key": "XSRF_TOKEN",
+			"value": ""
 		}
 	]
 }
