@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 certificates
+security-frontend
 
 ### STS ###
 .apt_generated
