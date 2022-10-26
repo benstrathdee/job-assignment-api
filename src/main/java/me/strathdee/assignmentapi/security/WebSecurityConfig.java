@@ -63,7 +63,6 @@ public class WebSecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
-
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -119,10 +118,11 @@ public class WebSecurityConfig {
     }
 
     // public + private keypair required for JWT encoding/decoding
-    // If not found, you should run the main() method in RSAKeyUtility which will generate them
-    // Or, run it again to overwrite the keys with new ones
-    RSAPublicKey publicKey = (RSAPublicKey) RSAKeyUtility.loadKeyFromFile("certificates/key.pub");
-    RSAPrivateKey privateKey = (RSAPrivateKey) RSAKeyUtility.loadKeyFromFile("certificates/key.priv");
+    private final String certsPath = "certificates/";
+    private final String publicKeyName = "key.pub";
+    private final String privateKeyName = "key.priv";
+    RSAPublicKey publicKey = (RSAPublicKey) RSAKeyUtility.loadKeyFromFile(certsPath + publicKeyName);
+    RSAPrivateKey privateKey = (RSAPrivateKey) RSAKeyUtility.loadKeyFromFile(certsPath + privateKeyName);
 
     // Responsible for decoding the JWT using the public key
     @Bean
@@ -133,7 +133,7 @@ public class WebSecurityConfig {
     // Responsible for creating the JWT using public + private keypair
     @Bean
     JwtEncoder jwtEncoder () {
-        JWK jwk = new RSAKey.Builder(this.publicKey).privateKey(this.privateKey).build();
+        JWK jwk = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
         JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwkSource);
     }

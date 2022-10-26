@@ -16,12 +16,6 @@ import java.util.*;
 @EqualsAndHashCode
 @AllArgsConstructor
 public class UserPrincipal implements UserDetails {
-    @Serial
-    private static final long serialVersionUID = 1L;
-    // UserDetails is a Serializable, which uses this ID during de-serialization. If not supplied,
-    // compiler will generate one, but defining one is generally the better idea
-    // https://stackoverflow.com/questions/285793/what-is-a-serialversionuid-and-why-should-i-use-it
-
     private final Integer id;
 
     private final String username;
