@@ -16,7 +16,7 @@ design pattern to simplify the construction of DTOs to the client.
 ## Table of Contents
 
 * [Usage](#usage)
-  + [Direct from Project Files](#direct-from-project-files)
+  + [Running from Project Files](#running-from-project-files)
   + [Standalone Runnable](#standalone-runnable)
 * [Techs](#techs)
 * [Endpoints](#endpoints)
