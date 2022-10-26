@@ -81,7 +81,7 @@ be a bit behind due to the constantly-changing nature of this repo as I learn mo
 
 ### Jobs
 
-* `POST` `/jobs` - Creates a job
+* `POST` `/jobs` - Creates a job (requires admin role)
 * `PATCH` `/jobs/{id}` - Updates job
 * `GET` `/jobs` - Lists all jobs
 * `GET` `/jobs?assigned={true|false}` - List all jobs, filtered by whether a job is assigned to a temp or not
@@ -89,11 +89,11 @@ be a bit behind due to the constantly-changing nature of this repo as I learn mo
 
 ### Temps
 
-* `POST` `/temps` - Create a temp
+* `POST` `/temps` - Create a temp (requires admin role)
 * `GET` `/temps` - List all temps
 * `GET` `/temps?jobId={jobId}` - List temps that are available for a job based on the jobs date range
 * `GET` `/temps/{id}` - Returns a specific temp
-
+* `GET` `/temps/tree` - Returns a tree representation of the temp hierarchy (requires admin role)
 ## Notes
 
 ### Security
