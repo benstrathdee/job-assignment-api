@@ -1,7 +1,7 @@
-package com.example.assignmentapi.dto.temp;
+package me.strathdee.assignmentapi.dto.temp;
 
-import com.example.assignmentapi.dto.Views;
-import com.example.assignmentapi.dto.job.JobReturnDTO;
+import me.strathdee.assignmentapi.dto.Views;
+import me.strathdee.assignmentapi.dto.job.JobReturnDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.*;

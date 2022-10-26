@@ -1,16 +1,16 @@
-package com.example.assignmentapi.service;
+package me.strathdee.assignmentapi.service;
 
-import com.example.assignmentapi.dto.user.UserLoginData;
-import com.example.assignmentapi.dto.user.UserRegistrationData;
-import com.example.assignmentapi.dto.user.UserReturnDTO;
-import com.example.assignmentapi.entity.User;
-import com.example.assignmentapi.exceptionhandling.BadRefreshException;
-import com.example.assignmentapi.exceptionhandling.UserDataExistsException;
-import com.example.assignmentapi.repository.TempRepository;
-import com.example.assignmentapi.repository.UserRepository;
-import com.example.assignmentapi.security.jwt.JwtUtils;
-import com.example.assignmentapi.security.UserPrincipal;
-import com.example.assignmentapi.utilities.DTODirector;
+import me.strathdee.assignmentapi.dto.user.UserLoginData;
+import me.strathdee.assignmentapi.dto.user.UserRegistrationData;
+import me.strathdee.assignmentapi.dto.user.UserReturnDTO;
+import me.strathdee.assignmentapi.entity.User;
+import me.strathdee.assignmentapi.exceptionhandling.BadRefreshException;
+import me.strathdee.assignmentapi.exceptionhandling.UserDataExistsException;
+import me.strathdee.assignmentapi.repository.TempRepository;
+import me.strathdee.assignmentapi.repository.UserRepository;
+import me.strathdee.assignmentapi.security.jwt.JwtUtils;
+import me.strathdee.assignmentapi.security.UserPrincipal;
+import me.strathdee.assignmentapi.utilities.DTODirector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +28,6 @@ import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
 
 @Service
 @Transactional
@@ -88,7 +87,7 @@ public class AuthService {
         ResponseCookie authCookie = generateAuthCookie(user);
         ResponseCookie refreshCookie = generateRefreshCookie(user);
 
-        // JWTs are returned as SET_COOKIEs
+        // JWTs are each returned as SET_COOKIE
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, authCookie.toString());
         headers.add(HttpHeaders.SET_COOKIE, refreshCookie.toString());

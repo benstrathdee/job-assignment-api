@@ -1,6 +1,6 @@
-package com.example.assignmentapi.repository;
+package me.strathdee.assignmentapi.repository;
 
-import com.example.assignmentapi.entity.Temp;
+import me.strathdee.assignmentapi.entity.Temp;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

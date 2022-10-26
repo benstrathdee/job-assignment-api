@@ -1,11 +1,12 @@
-package com.example.assignmentapi.utilities;
+package me.strathdee.assignmentapi.utilities;
 
-import com.example.assignmentapi.dto.job.*;
-import com.example.assignmentapi.dto.temp.*;
-import com.example.assignmentapi.dto.user.*;
-import com.example.assignmentapi.entity.*;
-import com.example.assignmentapi.security.UserPrincipal;
-import org.springframework.security.core.GrantedAuthority;
+import me.strathdee.assignmentapi.entity.Job;
+import me.strathdee.assignmentapi.entity.Temp;
+import me.strathdee.assignmentapi.security.UserPrincipal;
+import me.strathdee.assignmentapi.dto.job.JobReturnDTO;
+import me.strathdee.assignmentapi.dto.temp.TempReturnDTO;
+import me.strathdee.assignmentapi.dto.user.UserReturnDTO;
+import me.strathdee.assignmentapi.entity.User;
 
 import java.util.*;
 import java.util.stream.Collectors;

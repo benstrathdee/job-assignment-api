@@ -1,6 +1,4 @@
-package com.example.assignmentapi.exceptionhandling;
-
-import java.io.Serial;
+package me.strathdee.assignmentapi.exceptionhandling;
 
 public class TempNotAvailableException extends RuntimeException {
     public TempNotAvailableException(Integer tempId) {

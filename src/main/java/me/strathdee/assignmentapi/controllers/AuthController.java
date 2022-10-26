@@ -1,9 +1,9 @@
-package com.example.assignmentapi.controllers;
+package me.strathdee.assignmentapi.controllers;
 
-import com.example.assignmentapi.dto.user.UserLoginData;
-import com.example.assignmentapi.dto.user.UserRegistrationData;
-import com.example.assignmentapi.dto.user.UserReturnDTO;
-import com.example.assignmentapi.service.AuthService;
+import me.strathdee.assignmentapi.dto.user.UserLoginData;
+import me.strathdee.assignmentapi.dto.user.UserRegistrationData;
+import me.strathdee.assignmentapi.dto.user.UserReturnDTO;
+import me.strathdee.assignmentapi.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;

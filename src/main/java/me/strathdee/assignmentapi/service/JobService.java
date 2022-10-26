@@ -1,15 +1,15 @@
-package com.example.assignmentapi.service;
+package me.strathdee.assignmentapi.service;
 
-import com.example.assignmentapi.dto.job.JobCreateData;
-import com.example.assignmentapi.dto.job.JobReturnDTO;
-import com.example.assignmentapi.dto.job.JobUpdateData;
-import com.example.assignmentapi.entity.Job;
-import com.example.assignmentapi.entity.Temp;
-import com.example.assignmentapi.exceptionhandling.ResourceNotFoundException;
-import com.example.assignmentapi.exceptionhandling.TempNotAvailableException;
-import com.example.assignmentapi.repository.JobRepository;
-import com.example.assignmentapi.repository.TempRepository;
-import com.example.assignmentapi.utilities.DTODirector;
+import me.strathdee.assignmentapi.dto.job.JobCreateData;
+import me.strathdee.assignmentapi.dto.job.JobReturnDTO;
+import me.strathdee.assignmentapi.dto.job.JobUpdateData;
+import me.strathdee.assignmentapi.entity.Job;
+import me.strathdee.assignmentapi.entity.Temp;
+import me.strathdee.assignmentapi.exceptionhandling.ResourceNotFoundException;
+import me.strathdee.assignmentapi.exceptionhandling.TempNotAvailableException;
+import me.strathdee.assignmentapi.repository.JobRepository;
+import me.strathdee.assignmentapi.repository.TempRepository;
+import me.strathdee.assignmentapi.utilities.DTODirector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;

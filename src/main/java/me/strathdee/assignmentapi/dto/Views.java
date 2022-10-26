@@ -1,4 +1,4 @@
-package com.example.assignmentapi.dto;
+package me.strathdee.assignmentapi.dto;
 
 public class Views {
     public static class TempDefault {

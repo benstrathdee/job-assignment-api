@@ -1,4 +1,4 @@
-package com.example.assignmentapi.entity;
+package me.strathdee.assignmentapi.entity;
 
 import lombok.*;
 

@@ -1,6 +1,6 @@
-package com.example.assignmentapi.security.jwt;
+package me.strathdee.assignmentapi.security.jwt;
 
-import com.example.assignmentapi.security.UserPrincipal;
+import me.strathdee.assignmentapi.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;

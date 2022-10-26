@@ -1,9 +1,9 @@
-package com.example.assignmentapi.security;
+package me.strathdee.assignmentapi.security;
 
-import com.example.assignmentapi.security.jwt.AuthEntryPointJwt;
-import com.example.assignmentapi.security.jwt.AuthTokenFilter;
-import com.example.assignmentapi.service.UserService;
-import com.example.assignmentapi.utilities.RSAKeyUtility;
+import me.strathdee.assignmentapi.security.jwt.AuthEntryPointJwt;
+import me.strathdee.assignmentapi.security.jwt.AuthTokenFilter;
+import me.strathdee.assignmentapi.service.UserService;
+import me.strathdee.assignmentapi.utilities.RSAKeyUtility;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

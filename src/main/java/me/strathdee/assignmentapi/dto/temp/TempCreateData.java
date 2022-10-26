@@ -1,4 +1,4 @@
-package com.example.assignmentapi.dto.temp;
+package me.strathdee.assignmentapi.dto.temp;
 
 import lombok.Getter;
 

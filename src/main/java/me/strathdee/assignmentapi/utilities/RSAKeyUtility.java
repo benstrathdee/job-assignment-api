@@ -1,4 +1,4 @@
-package com.example.assignmentapi.utilities;
+package me.strathdee.assignmentapi.utilities;
 
 import org.springframework.stereotype.Component;
 

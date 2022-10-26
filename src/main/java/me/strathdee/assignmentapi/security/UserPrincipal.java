@@ -1,4 +1,4 @@
-package com.example.assignmentapi.security;
+package me.strathdee.assignmentapi.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serial;
 import java.util.*;
 
 @Builder

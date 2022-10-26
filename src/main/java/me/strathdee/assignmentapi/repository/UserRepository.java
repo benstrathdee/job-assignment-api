@@ -1,6 +1,6 @@
-package com.example.assignmentapi.repository;
+package me.strathdee.assignmentapi.repository;
 
-import com.example.assignmentapi.entity.User;
+import me.strathdee.assignmentapi.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

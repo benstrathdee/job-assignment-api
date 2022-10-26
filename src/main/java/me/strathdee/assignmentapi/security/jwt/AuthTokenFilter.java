@@ -1,7 +1,7 @@
-package com.example.assignmentapi.security.jwt;
+package me.strathdee.assignmentapi.security.jwt;
 
-import com.example.assignmentapi.service.AuthService;
-import com.example.assignmentapi.service.UserService;
+import me.strathdee.assignmentapi.service.AuthService;
+import me.strathdee.assignmentapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,7 +41,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         if (!isAuth) {
             try {
                 String authToken = authService.getTokenFromCookies(request, authCookieName);
-                if (authToken != null && !authToken.equals("") && !isAuth) {
+                if (authToken != null && !authToken.equals("")) {
                     String username = jwtUtils.getUserNameFromToken(authToken);
 
                     boolean jwtIsValid = jwtUtils.isJwtValid(authToken);

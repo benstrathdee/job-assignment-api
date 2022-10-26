@@ -1,9 +1,10 @@
-package com.example.assignmentapi.controllers;
+package me.strathdee.assignmentapi.controllers;
 
-import com.example.assignmentapi.dto.Views;
-import com.example.assignmentapi.dto.temp.*;
-import com.example.assignmentapi.service.TempService;
+import me.strathdee.assignmentapi.dto.Views;
+import me.strathdee.assignmentapi.service.TempService;
 import com.fasterxml.jackson.annotation.JsonView;
+import me.strathdee.assignmentapi.dto.temp.TempCreateData;
+import me.strathdee.assignmentapi.dto.temp.TempReturnDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

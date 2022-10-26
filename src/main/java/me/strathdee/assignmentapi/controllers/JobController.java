@@ -1,9 +1,9 @@
-package com.example.assignmentapi.controllers;
+package me.strathdee.assignmentapi.controllers;
 
-import com.example.assignmentapi.dto.job.JobCreateData;
-import com.example.assignmentapi.dto.job.JobReturnDTO;
-import com.example.assignmentapi.dto.job.JobUpdateData;
-import com.example.assignmentapi.service.JobService;
+import me.strathdee.assignmentapi.dto.job.JobCreateData;
+import me.strathdee.assignmentapi.dto.job.JobReturnDTO;
+import me.strathdee.assignmentapi.dto.job.JobUpdateData;
+import me.strathdee.assignmentapi.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -1,4 +1,4 @@
-package com.example.assignmentapi.exceptionhandling;
+package me.strathdee.assignmentapi.exceptionhandling;
 
 import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;

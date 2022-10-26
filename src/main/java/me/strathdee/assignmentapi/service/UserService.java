@@ -1,8 +1,8 @@
-package com.example.assignmentapi.service;
+package me.strathdee.assignmentapi.service;
 
-import com.example.assignmentapi.entity.User;
-import com.example.assignmentapi.repository.UserRepository;
-import com.example.assignmentapi.security.UserPrincipal;
+import me.strathdee.assignmentapi.entity.User;
+import me.strathdee.assignmentapi.repository.UserRepository;
+import me.strathdee.assignmentapi.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
