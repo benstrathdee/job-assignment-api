@@ -31,6 +31,12 @@ design pattern to simplify the construction of DTOs to the client.
 ## Usage
 
 * Requires JDK17+
+* Requires a MySQL Server
+
+The project files expect a MySQL Server running on `localhost` on port `3306` with username 
+`root` and password `password`. Upon running the project, a new DB will be created on this server named
+`job_assignment_db`. These settings can be altered in `src/main/resources/application.properties`, or 
+passed in as arguments on runtime (more secure).
 
 1. `git clone` this repo
 2. An RSA KeyPair (with names `key.pub` and `key.priv`) is required for JWT encoding/decoding. 
@@ -53,6 +59,7 @@ Some sample data is initialised for testing purposes (such as with the provided 
 ## Techs 
 
 * JDK 17+
+* MySQL
 * Spring from Spring Initializr with the following dependencies:
   * Spring Boot 2.7.5
   * Spring Web
@@ -94,6 +101,7 @@ be a bit behind due to the constantly-changing nature of this repo as I learn mo
 * `GET` `/temps?jobId={jobId}` - List temps that are available for a job based on the jobs date range
 * `GET` `/temps/{id}` - Returns a specific temp
 * `GET` `/temps/tree` - Returns a tree representation of the temp hierarchy (requires admin role)
+
 ## Notes
 
 ### Security
@@ -122,6 +130,8 @@ subsequent request.
   each modifying request. 
   * Ideally even requests to the `/auth/**` endpoints should require this token, but this requires a pre-session 
   implementation
+* Ideally I want to implement a more secure way to store the username/password of the MySQL server as well as the RSA
+keys used for JWT. I will be investigating Spring Vault which seems to be a decent solution for storing secrets.
 
 ### RSA Keys
 
