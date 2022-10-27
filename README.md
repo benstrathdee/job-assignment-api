@@ -30,7 +30,7 @@ design pattern to simplify the construction of DTOs to the client.
 
 ## Usage
 
-* Requires JDK18+
+* Requires JDK17+
 
 1. `git clone` this repo
 2. An RSA KeyPair (with names `key.pub` and `key.priv`) is required for JWT encoding/decoding. 
@@ -52,7 +52,7 @@ Some sample data is initialised for testing purposes (such as with the provided 
 
 ## Techs 
 
-* JDK 19
+* JDK 17+
 * Spring from Spring Initializr with the following dependencies:
   * Spring Boot 2.7.5
   * Spring Web
