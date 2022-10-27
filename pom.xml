@@ -14,7 +14,7 @@
 	<name>Assignment API</name>
 	<description>Job Assignment/Resourcing API</description>
 	<properties>
-		<java.version>18</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
